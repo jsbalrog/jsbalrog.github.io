@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: javascript | JS Balrog]]></title>
+  <link href="http://yoursite.com/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://yoursite.com/"/>
+  <updated>2013-10-17T09:14:54-06:00</updated>
+  <id>http://yoursite.com/</id>
+  <author>
+    <name><![CDATA[Ted Jenkins]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Understanding Closures In Javascript]]></title>
+    <link href="http://yoursite.com/blog/2013/10/17/understanding-closures-in-javascript/"/>
+    <updated>2013-10-17T09:06:00-06:00</updated>
+    <id>http://yoursite.com/blog/2013/10/17/understanding-closures-in-javascript</id>
+    <content type="html"><![CDATA[<p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
+post on the topic. I think it covers the subject well: check out Angus Croll&rsquo;s &ldquo;<a href="http://javascriptweblog.wordpress.com/2010/10/25/understanding-javascript-closures/">Understanding JavaScript Closures</a>&rdquo;.</p>
+]]></content>
+  </entry>
+  
+</feed>
