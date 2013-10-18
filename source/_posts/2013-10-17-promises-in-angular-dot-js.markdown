@@ -12,7 +12,9 @@ like a banshee. However, promise-based structures provided a more elegant soluti
 than callbacks--particularly when you were several calls deep. I will describe
 what I learned in the context of Angular, as it has a very simple yet elegant
 implementation of promises in its $q library.
+
 <!-- more -->
+
 First, imagine we have a function for a person. We will define two callbacks for
 this person: one for what success for them would be, and one for what their
 life's error condition would look like. We'll assume they are either happy or
