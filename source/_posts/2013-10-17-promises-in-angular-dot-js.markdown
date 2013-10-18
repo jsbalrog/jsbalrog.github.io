@@ -3,7 +3,7 @@ layout: post
 title: "Promises in Angular.js"
 date: 2013-10-17 21:43
 comments: true
-categories: 
+categories: javascript, angular
 ---
 One of the hardest things for me to grok in JavaScript was promise-based style
 handling of the async nature of the language.
