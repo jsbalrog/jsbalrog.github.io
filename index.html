@@ -104,109 +104,12 @@ than callbacks&mdash;particularly when you were several calls deep. I will descr
 what I learned in the context of Angular, as it has a very simple yet elegant
 implementation of promises in its $q library.</p>
 
-<p>First, imagine we have a function for a person. We will define two callbacks for
-this person: one for what success for them would be, and one for what their
-life&rsquo;s error condition would look like. We&rsquo;ll assume they are either happy or
-sad:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">Person</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">success</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; is happy because &quot;</span> <span class="o">+</span> <span class="nx">reason</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">error</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot; is sad because &quot;</span> <span class="o">+</span> <span class="nx">reason</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Next, we&rsquo;ll create this person:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">fred</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">(</span><span class="s2">&quot;Fred&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We now need to define a task that needs to be accomplished in the future. We&rsquo;ll
-say it&rsquo;s a delivery of shiny new roller stakes from Amazon. Receiving them
-would be a success, and thus make Fred happy. Having them not delivered would
-be an error, and thus make Fred really sad.</p>
-
-<p>To do so, we&rsquo;ll create a task using $q&rsquo;s defer() method. This creates a
-deferred object, which holds the future task execution:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">task</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This future task object has a promise object as a property; it is the placeholder
-for the results of the task&rsquo;s execution:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">task</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We then set up the order of events, using &ldquo;promise, then&rdquo; syntax. This takes the
-place of passing callback(s) to the task method, and having the task method have to call
-them when complete.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">results</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fred</span><span class="p">.</span><span class="nx">success</span><span class="p">,</span> <span class="nx">fred</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We can then have the task programmatically succeed or fail depending on whatever
-arbitrary logic we choose. $q&rsquo;s parlance is &ldquo;resolve&rdquo; or &ldquo;reject&rdquo;.</p>
-
-<p>If we succeed:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">task</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&quot;Roller skates from Amazon have arrived&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&hellip;the appropriate &ldquo;happy&rdquo; success method is called. Conversely, if we fail:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">task</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Roller skates from Amazon are backordered&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&hellip;the appropriate &ldquo;sad&rdquo; error method is called.</p>
-
-<p>This is a pretty simple example, one that maybe unneccessarily takes on a lot of
-overhead for promises. But you can see how if we now introduce other objects&mdash;say
-an Amazon online store that has takeOrder, deliverOrder, and problemWithOrder
-methods&mdash;using promises could avoid multiple levels of callback heck. The takeOrder
-method could take an argument of ordered items, and set up a current order that
-had an items property as well as a task deferred object. Instead of returning the
-order, it simply returns the promise property of the task deferred object, which
-is used to call then() on:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">amazon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MailOrder</span><span class="p">(</span><span class="nx">$q</span><span class="p">);</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">itemDelivered</span> <span class="o">=</span> <span class="nx">amazon</span><span class="p">.</span><span class="nx">takeOrder</span><span class="p">(</span><span class="s1">&#39;Nexus 7&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">itemDelivered</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">fred</span><span class="p">.</span><span class="nx">success</span><span class="p">,</span> <span class="nx">fred</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
-</span><span class='line'><span class="nx">amazon</span><span class="p">.</span><span class="nx">problemWithOrder</span><span class="p">(</span><span class="s1">&#39;Nexus 7 is no longer in stock!&#39;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/17/promises-in-angular-dot-js/">Read on &rarr;</a>
+    </footer>
   
 
 
