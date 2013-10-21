@@ -93,5 +93,5 @@ var itemDelivered = amazon.takeOrder('Nexus 7');
 itemDelivered.then(fred.success, fred.error);
 amazon.problemWithOrder('Nexus 7 is no longer in stock!');
 ```
-For another take at promises in angular using a different metaphor, 
-see <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">"Promises in AngularJS, Explained as a Cartoon"</a>.
+<em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor. 
+See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">"Promises in AngularJS, Explained as a Cartoon"</a>.
