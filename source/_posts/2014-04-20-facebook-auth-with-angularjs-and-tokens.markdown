@@ -5,7 +5,7 @@ date: 2014-04-20 19:28
 comments: true
 categories: 
 ---
-(For a full, working example, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)
+(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)
 <p>
 I have an angular-fullstack based app (angular, node, express, passport),
 and I'm using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>, 
