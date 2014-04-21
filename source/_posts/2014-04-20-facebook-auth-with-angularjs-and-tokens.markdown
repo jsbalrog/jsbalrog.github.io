@@ -31,7 +31,7 @@ each to no avail. Granted, both were under the "cookie-based auth" umbrella,
 but that shouldn't matter, right?
 <p>
 After searching for nearly two days, I came up with the idea of making
-auth request client-side, rather than server-side. Using the ngFacebook
+auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
 angular module along with grunt-ng-constant gave me the answer I needed!
 Here's how to do it.
 
