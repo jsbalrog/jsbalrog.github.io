@@ -9,9 +9,8 @@
   <meta name="author" content="Ted Jenkins">
 
   
-  <meta name="description" content="In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
-I used to tell my guitar students that it takes literally miles
-of &hellip;">
+  <meta name="description" content="(For a full, working example, see my angular-fullstack-tokens repo.) I have an angular-fullstack based app (angular, node, express, passport),
+and I& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +66,76 @@ of &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Facebook Auth With Angularjs and Tokens</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-20T19:28:00-06:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>(For a full, working example, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
+
+<p><p>
+I have an angular-fullstack based app (angular, node, express, passport),
+and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
+rather than cookie-based, using express-jwt and jsonwebtoken.
+<p>
+I started with daftmonk&rsquo;s angular-fullstack,
+replaced it&rsquo;s authentication system with tokens (easy enough), then set
+out to include social-based authentication for facebook, using passport-
+facebook. I kept running into CSRF-prevention issues, with the error
+<code>No 'Access-Control-Allow-Origin' header is present on the requested
+resource.</code>
+<p>
+Without going too far off topic, this was due to the fact that
+I was attempting to make an <code>$http</code> call from the client to a node route
+that I had set up for facebook authentication, rather than simply using
+an anchor tag href call on the client. Ajax calls are particular tricky
+across domain origins. I had to set it up this way because I wanted my
+server to return user info of my making back to the client.
+<p>
+I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
+and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
+each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
+but that shouldn&rsquo;t matter, right?
+<p>
+After searching for nearly two days, I came up with the idea of making
+auth request client-side, rather than server-side. Using the ngFacebook
+angular module along with grunt-ng-constant gave me the answer I needed!
+Here&rsquo;s how to do it.</p>
+
+<p></div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -215,6 +284,10 @@ post on the topic. I think it covers the subject well: check out Angus Croll&rsq
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Facebook Auth With Angularjs and Tokens</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/10/19/coding-equals-equals-practice/">Coding == Practice</a>
