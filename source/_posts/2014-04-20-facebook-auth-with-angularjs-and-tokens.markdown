@@ -32,7 +32,7 @@ but that shouldn't matter, right?
 <p>
 After searching for nearly two days, I came up with the idea of making
 auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
-angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed!
+angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here's how to do it.
 
 <!-- more -->
