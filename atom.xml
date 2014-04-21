@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-04-21T08:27:22-06:00</updated>
+  <updated>2014-04-21T08:28:28-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -46,7 +46,7 @@ but that shouldn&rsquo;t matter, right?
 <p>
 After searching for nearly two days, I came up with the idea of making
 auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
-angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed!
+angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here&rsquo;s how to do it.</p>
 
 <p><!-- more -->
