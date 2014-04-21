@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-04-20T19:47:19-06:00</updated>
+  <updated>2014-04-20T20:33:49-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -18,7 +18,7 @@
     <link href="http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/"/>
     <updated>2014-04-20T19:28:00-06:00</updated>
     <id>http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
-    <content type="html"><![CDATA[<p>(For a full, working example, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
+    <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
 <p><p>
 I have an angular-fullstack based app (angular, node, express, passport),
