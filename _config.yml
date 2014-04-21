@@ -100,7 +100,7 @@ disqus_short_name: jsbalrog
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-50193650-1
 
 # Facebook Like
 facebook_like: true
