@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-04-20T20:33:49-06:00</updated>
+  <updated>2014-04-21T08:03:37-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -25,8 +25,8 @@ I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
 rather than cookie-based, using express-jwt and jsonwebtoken.
 <p>
-I started with daftmonk&rsquo;s angular-fullstack,
-replaced it&rsquo;s authentication system with tokens (easy enough), then set
+I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack/blob/master/package.json">angular-fullstack</a>,
+replaced its authentication system with tokens (easy enough), then set
 out to include social-based authentication for facebook, using passport-
 facebook. I kept running into CSRF-prevention issues, with the error
 <code>No 'Access-Control-Allow-Origin' header is present on the requested
