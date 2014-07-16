@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-05-06T08:22:23-06:00</updated>
+  <updated>2014-07-16T08:45:40-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -14,42 +14,442 @@
 
   
   <entry>
+    <title type="html"><![CDATA[OO javascript: Creating objects]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/07/16/oo-javascript-creating-objects/"/>
+    <updated>2014-07-16T07:35:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/07/16/oo-javascript-creating-objects</id>
+    <content type="html"><![CDATA[<p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
+inheritance, and polymorphism. Javascript of course has no concept of such things as classes; therefore, we use common javascript principles in order to
+take advantage of such things–even for how we define a javascript “object”.
+This post in particular will focus on javascript object creation.</p>
+
+<!-- more -->
+
+
+<p>There really is no way to define a class in javascript. ECMA-262 defines an object as an “unordered collection of properties each of which contains a
+primitive value, object, or function.” As such, a javascript object is really nothing more than an array of values (which could be any combination of
+primitives, other objects, or functions) that are named. This means that an object in javascript is more closely aligned to what I as a traditional
+OO-language developer think of as a hash table or a map–a grouping of name-value pairs.</p>
+
+<h3>Creating objects</h3>
+
+<p>Here’s how you’d typically create an object in javascript:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">guitar</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="s2">&quot;Fender&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">guitar</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">guitar</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="mi">1963</span><span class="p">;</span>
+</span><span class='line'><span class="nx">guitar</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;Electric&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">guitar</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Looks good. The problem with this traditional approach is that if you were to create multiple guitar objects, you’d be duplicating a lot of code. Dang! This is where programming patterns can help.</p>
+
+<h3>The factory pattern</h3>
+
+<p>Let&rsquo;s set up a bit of code that acts like a factory&mdash;in other
+words, it is responsible for creating a guitar whenever we call it.
+We&rsquo;ll call it <code>createGuitar</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">createGuitar</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Object</span><span class="p">();</span>
+</span><span class='line'>    <span class="nx">o</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">o</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">o</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">year</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">o</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">o</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">o</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;And then this factory function could be used to build multiple objects with little code duplication:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">guitar1</span> <span class="o">=</span> <span class="nx">createGuitar</span><span class="p">(</span><span class="s2">&quot;Fender&quot;</span><span class="p">,</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">,</span> <span class="mi">1963</span><span class="p">,</span> <span class="s2">&quot;electric&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar2</span> <span class="o">=</span> <span class="nx">createGuitar</span><span class="p">(</span><span class="s2">&quot;Gibson&quot;</span><span class="p">,</span> <span class="s2">&quot;Hummingbird&quot;</span><span class="p">,</span> <span class="mi">1957</span><span class="p">,</span> <span class="s2">&quot;acoustic&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem with the factory pattern is that we can’t identify what type of an object guitar1 or guitar2 is. Change the names of the variables, and it’s even more potentially confusing. That&rsquo;s
+where the constructor pattern helps.</p>
+
+<h3>The constructor pattern</h3>
+
+<p>Let&rsquo;s create a function that&mdash;like the factory pattern&mdash;is responsible
+for creating our objects. However, let&rsquo;s take advantage of some built-in
+features of javascript itself (specifically the <code>new</code> operator and the
+<code>this</code> keyword) to be able to identify the object type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">year</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">(</span><span class="s2">&quot;Fender&quot;</span><span class="p">,</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">,</span> <span class="mi">1963</span><span class="p">,</span> <span class="s2">&quot;electric&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">(</span><span class="s2">&quot;Gibson&quot;</span><span class="p">,</span> <span class="s2">&quot;Hummingbird&quot;</span><span class="p">,</span> <span class="mi">1957</span><span class="p">,</span> <span class="s2">&quot;acoustic&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that this constructor is just a function named Guitar (with an uppercase “G”, as javascript convention dictates). No object being created, the properties and methods are assigned to the “this” object, and no return statement. Calling a constructor with the “new” operator causes four steps:
+1. Create a new object.
+2. Assign the scope of the constructor to the new object so <code>this</code> points to the new object.
+3. Execute the code inside the constructor which adds properties to the new object.
+4. Return the new object.</p>
+
+<p>Furthermore, each of these objects has a “constructor” property that points back to the “Guitar” constructor/function. This property was intended for use in identifying the object type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">guitar1</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nx">Guitar</span> <span class="c1">// true</span>
+</span><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nx">Guitar</span> <span class="c1">// true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is an advantage over the Factory pattern. The “instanceof” operator is considered to be a safer way of determining type.</p>
+
+<p>The only difference between javascript “constructors” and other javascript functions is the way they are called (with the <code>new</code> operator).
+Any function that is called with the <code>new</code> operator acts as a constructor. So, what if I call it without the <code>new</code> operator? The properties
+get added to the <code>window</code> object. <code>this</code> then points to the “Global” object when a function is called in the global scope. Using <code>new</code>
+assigns the scope of the function to the new object represented by the variable (<code>var</code>).</p>
+
+<p>So, any possible problems here?</p>
+
+<p>Try this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">==</span> <span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What do you think the result is?</p>
+
+<p>If you said &ldquo;false&rdquo;, give yourself a brownie.
+For every object created with a constructor pattern, a new method/function instance is created for each object instance–they are not the same instance of “Function”. The constructor is really doing the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">year</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Function</span><span class="p">(</span><span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">));</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For the function/method <code>getBrand</code>, a new Function object
+is created every time a new Guitar is created.</p>
+
+<p>We really don’t need two instances of Function that do the same thing. One workaround is to move the function definition outside of the constructor:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">year</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="nx">getBrand</span><span class="p">;</span> <span class="c1">// set the getBrand variable to the global</span>
+</span><span class='line'><span class="nx">getBrand</span><span class="p">()</span> <span class="kd">function</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// getBrand defined here is a global function</span>
+</span><span class='line'><span class="kd">function</span> <span class="nx">getBrand</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This works, but clutters up the global scope. Think if <code>Guitar</code> had more methods, like <code>getModel</code>, <code>getYear</code>, <code>play</code>, etc.!</p>
+
+<h3>The prototype pattern</h3>
+
+<p>The prototype pattern solves this problem. Every function is created with a <code>prototype</code> property, which is an object containing properties and methods that
+should be available to instances of a particular reference type.</p>
+
+<p>Let’s rewrite the previous example to use the prototype pattern:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="s2">&quot;Fender&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="mi">2006</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;electric&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">alert</span> <span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>     <span class="c1">// &quot;Fender&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>     <span class="c1">// &quot;Fender&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">==</span> <span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">);</span>    <span class="c1">// true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we still call the (now empty) <code>Guitar</code> function as a constructor
+to create new guitars and we have the properties and methods present, which
+here are shared among instances.</p>
+
+<p><code>guitar1</code> has a property that points to the prototype object. So does <code>guitar2</code>.
+(This is known internally as <code>__proto__</code>, which can be examined via the <code>isPrototypeOf()</code> method).
+The <code>Guitar</code> constructor function has a member called <code>prototype</code>, which also points to the
+prototype object. So,</p>
+
+<ul>
+<li><code>guitar1.__proto__</code> points to <code>Guitar</code>’s prototype object</li>
+<li><code>guitar2.__proto__</code> points to <code>Guitar</code>’s prototype object</li>
+<li><code>Guitar.prototype</code> points to <code>Guitar</code>’s prototype object</li>
+</ul>
+
+
+<p>This protoype object has a <code>constructor</code> property. It also has other
+properties and methods as defined by the user. This constructor property points back to the <code>constructor</code> function (<code>Guitar</code>).</p>
+
+<p>Here&rsquo;s alternate prototype syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">constructor</span> <span class="o">:</span> <span class="nx">Guitar</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">brand</span> <span class="o">:</span> <span class="s2">&quot;Fender&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">model</span> <span class="o">:</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">year</span> <span class="o">:</span> <span class="mi">2006</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">type</span> <span class="o">:</span> <span class="s2">&quot;electric&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">getBrand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">alert</span> <span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>     <span class="c1">// &quot;Fender&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>     <span class="c1">// &quot;Fender&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">==</span> <span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">);</span>    <span class="c1">// true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It is important to note that it is not possible to overwrite prototype’s values. In other words, if you add a property to an instance that is the same name as a property on the object’s prototype, you create the property on the instance, which shadows the property on the prototype. For example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="s2">&quot;PRS&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>  <span class="c1">// PRS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To find a property, the javascript compiler performs a two-Step Search order: First it checks the instance for the property/method. If it’s not found there, it then checks the prototype.</p>
+
+<p>There are some problems with this approach. You can’t pass initialization arguments into the constructor–all instances of the object get the same property values by default.</p>
+
+<p>This kinda blows because typically we don’t want all of our object’s properties to have the same values–we want a guitar that’s a Fender brand, we want one that’s a PRS, etc. And yet we still want to take advantage of having methods shared among the various objects. What we need is a combination of approaches.</p>
+
+<h3>The Constructor/Prototype combination pattern</h3>
+
+<p>In the Constructor/Prototype Combination pattern, the constructor defines instance properties, and the prototype defines methods and shared properties. Best of both worlds, right? To do it,
+we take a clue from the alternate prototype syntax described above, and explicitly set the constructor
+property on the prototype object to point to our constructor function. However, the only other property we define is the method we want shared. Every other property
+goes in the constructor function:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">(</span><span class="nx">brand</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">brand</span> <span class="o">=</span> <span class="nx">brand</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">year</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">constructor</span> <span class="o">:</span> <span class="nx">Guitar</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">getBrand</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">brand</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">(</span><span class="s2">&quot;Fender&quot;</span><span class="p">,</span> <span class="s2">&quot;Stratocaster&quot;</span><span class="p">,</span> <span class="mi">1963</span><span class="p">,</span> <span class="s2">&quot;electric&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">guitar2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">(</span><span class="s2">&quot;Gibson&quot;</span><span class="p">,</span> <span class="s2">&quot;Hummingbird&quot;</span><span class="p">,</span> <span class="mi">1957</span><span class="p">,</span> <span class="s2">&quot;acoustic&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>
+</span><span class='line'><span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">();</span>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="nx">guitar1</span><span class="p">.</span><span class="nx">getBrand</span> <span class="o">===</span> <span class="nx">guitar2</span><span class="p">.</span><span class="nx">getBrand</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have our cake and eat it, too: We can create guitars passing
+in different initialization parameters for each one, and yet all guitars
+share the same <code>getBrand</code> method. Great, huh?</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Stick it to DRM]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/05/06/stick-it-to-drm/"/>
     <updated>2014-05-06T08:10:00-06:00</updated>
     <id>http://jsbalrog.github.io/blog/2014/05/06/stick-it-to-drm</id>
-    <content type="html"><![CDATA[<p>As a Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
+    <content type="html"><![CDATA[<p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
 material in digital format&mdash;has long been a sticking point for me. International Day Against
 DRM is Tuesday, May 6th. Several publishing houses are marking this day with great discounts.
 One such publisher that I really like, Packt (pronounced &ldquo;packed&rdquo;) Publishing, is offering
 anything in their catalog for $10 during May 6th. Pretty sweet, huh?</p>
 
-<p><p/>
-Here&rsquo;re the details from
-Packt Publishing&rsquo;s press release:
-<p/>
-&ldquo;Packt Publishing firmly believes that you should be able to read and interact with
+<!-- more -->
+
+
+<p>Here&rsquo;re the details from
+Packt Publishing&rsquo;s press release:</p>
+
+<p>&ldquo;Packt Publishing firmly believes that you should be able to read and interact with
 your content when you want, where you want, and how you want – to that end they
 have been advocates of DRM-free content since their very first eBook was published
-back in 2004.
-<p/>
-&#8220;To show their continuing support for <a href="https://www.defectivebydesign.org/dayagainstdrm">
+back in 2004.</p>
+
+<p>To show their continuing support for <a href="https://www.defectivebydesign.org/dayagainstdrm">
 Day Against DRM</a>, Packt Publishing is offering
 all its DRM-free content at $10 for 24 hours only on May 6th
-eBooks and Videos at www.packtpub.com.
-<p/>
-“&#8217;Our top priority at Packt has always been to meet the evolving needs of developers
+eBooks and Videos at www.packtpub.com.</p>
+
+<p>Our top priority at Packt has always been to meet the evolving needs of developers
 in the most practical way possible, while at the same time protecting the hard work of
 our authors. DRM-free content continues to be instrumental in making that happen,
 providing the flexibility and freedom that is essential for an efficient and enhanced
 learning experience. That’s why we’ve been DRM-free from the beginning – we’ll
-never put limits on the innovation of our users.&lsquo;&rsquo;
-<p/>
-<b>– Dave Maclean, Managing Director<b/>
-<p/>
-&#8220;Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th
+never put limits on the innovation of our users.</p>
+
+<p>– Dave Maclean, Managing Director</p>
+
+<p>Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th
 by exploring the full range of DRM-free content at <a href="www.packtpub.com">www.packtpub.com</a>,
-where all eBooks and Videos will be $10 for 24 hours.&rdquo;&#8221;</p>
+where all eBooks and Videos will be $10 for 24 hours.&#8221;</p>
 ]]></content>
   </entry>
   
@@ -60,47 +460,50 @@ where all eBooks and Videos will be $10 for 24 hours.&rdquo;&#8221;</p>
     <id>http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
     <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
-<p><p>
-I have an angular-fullstack based app (angular, node, express, passport),
+<p>I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
-rather than cookie-based, using express-jwt and jsonwebtoken.
-<p>
-I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
+rather than cookie-based, using express-jwt and jsonwebtoken.</p>
+
+<p>I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
 replaced its authentication system with tokens (easy enough), then set
 out to include social-based authentication for facebook, using passport-
 facebook. I kept running into CSRF-prevention issues, with the error
-<code>No 'Access-Control-Allow-Origin' header is present on the requested
-resource.</code>
-<p>
-Without going too far off topic, this was due to the fact that
+No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested
+resource.</p>
+
+<p>Without going too far off topic, this was due to the fact that
 I was attempting to make an <code>$http</code> call from the client to a node route
 that I had set up for facebook authentication, rather than simply using
 an anchor tag href call on the client. Ajax calls are particular tricky
 across domain origins. I had to set it up this way because I wanted my
-server to return user info of my making back to the client.
-<p>
-I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
+server to return user info of my making back to the client.</p>
+
+<p>I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
 and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
 each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
-but that shouldn&rsquo;t matter, right?
-<p>
-After searching for nearly two days, I came up with the idea of making
+but that shouldn&rsquo;t matter, right?</p>
+
+<p>After searching for nearly two days, I came up with the idea of making
 auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
 angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here&rsquo;s how to do it.</p>
 
-<p><!-- more -->
-<h3>Client-side auth with ngFacebook</h3>
-First, install ngFacebook via Bower:</p>
+<!-- more -->
 
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bower install ngFacebook -save</span></code></pre></td></tr></table></div></figure></p>
+
+<h3>Client-side auth with ngFacebook</h3>
+
+<p>First, install ngFacebook via Bower:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bower install ngFacebook -save</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Then, in your angular app.js (or wherever you do your module&rsquo;s config),
 declare &lsquo;facebook&rsquo; as a dependency, and initialize using your Facebook&rsquo;s
 app id, thus:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -114,21 +517,24 @@ app id, thus:</p>
 </span><span class='line'>            <span class="nx">appId</span><span class="o">:</span> <span class="s1">&#39;myFbApplicationId&#39;</span>
 </span><span class='line'>        <span class="p">});</span>
 </span><span class='line'>    <span class="p">}]);</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>(But what about multiple environments? Those FB apps are picky about site URLs.
-More on this in the next section&hellip;)
-<p>
-Now, wherever you plan on having the user do the facebook auth, add the proper
+More on this in the next section&hellip;)</p>
+
+<p>Now, wherever you plan on having the user do the facebook auth, add the proper
 button:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-primary btn-large&quot;</span> <span class="na">data-ng-click=</span><span class="s">&quot;loginFacebook()&quot;</span><span class="nt">&gt;</span>Login with Facebook<span class="nt">&lt;/button&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
-Next, in your controller, set up calls to do your facebook logins much the
+
+
+<p>Next, in your controller, set up calls to do your facebook logins much the
 same way you would typically make calls using Facebook&rsquo;s javascript SDK:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -158,16 +564,17 @@ same way you would typically make calls using Facebook&rsquo;s javascript SDK:</
 </span><span class='line'>    <span class="p">});</span>
 </span><span class='line'>  <span class="p">});</span>
 </span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Notice that it&rsquo;s all promised-based goodness. For my purposes, in the result
 of my call to &lsquo;/me&rsquo; I&rsquo;m in turn making an <code>$http</code> call to one of my server routes
 that I have set up for checking for user info/creating a new user in my own
-data store. On a successful return there, I direct the user to the homepage.
-<p>
-For sake of completeness, here&rsquo;s my Auth service method:</p>
+data store. On a successful return there, I direct the user to the homepage.</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>For sake of completeness, here&rsquo;s my Auth service method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -201,20 +608,24 @@ For sake of completeness, here&rsquo;s my Auth service method:</p>
 </span><span class='line'>        <span class="p">});</span>
 </span><span class='line'>      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>So, back to that question of different facebook app id&rsquo;s to account for
 different environments. grunt-ng-constant to the rescue&hellip;</p>
 
-<p><h3>Using grunt-ng-constant</h3>
-First, let&rsquo;s install grunt-ng-constant:</p>
+<h3>Using grunt-ng-constant</h3>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">grunt</span><span class="o">&ndash;</span><span class="nx">ng</span><span class="o">&ndash;</span><span class="nx">constant</span> <span class="o">&mdash;</span><span class="nx">save</span><span class="o">&ndash;</span><span class="nx">dev</span>
+<p>First, let&rsquo;s install grunt-ng-constant:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">grunt</span><span class="o">-</span><span class="nx">ng</span><span class="o">-</span><span class="nx">constant</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span>
 </span></code></pre></td></tr></table></div></figure>
-Next, in your <code>Gruntfile.js</code>, enter the following:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>Next, in your <code>Gruntfile.js</code>, enter the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -274,16 +685,17 @@ Next, in your <code>Gruntfile.js</code>, enter the following:</p>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">},</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>This tells grunt to automatically create a file called config.js under
-the <code>scripts</code> folder.
-<p>
-How do we tell grunt when to create this file? I put mine in the section
+the <code>scripts</code> folder.</p>
+
+<p>How do we tell grunt when to create this file? I put mine in the section
 that tells it to run a local server for development. I added it to the run
 task of the <code>grunt serve</code> task:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -314,9 +726,11 @@ task of the <code>grunt serve</code> task:</p>
 </span><span class='line'>  <span class="p">]);</span>
 </span><span class='line'><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-And then, for grunt production, I added mine to the <code>grunt build</code> task:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>And then, for grunt production, I added mine to the <code>grunt build</code> task:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -326,11 +740,12 @@ And then, for grunt production, I added mine to the <code>grunt build</code> tas
 </span><span class='line'>  <span class="s1">&#39;ngconstant:production&#39;</span><span class="p">,</span>
 </span><span class='line'>  <span class="s1">&#39;bower-install&#39;</span>
 </span><span class='line'><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>When grunt runs, a config.js file is created:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -343,25 +758,31 @@ And then, for grunt production, I added mine to the <code>grunt build</code> tas
 </span><span class='line'>  <span class="s1">&#39;appId&#39;</span><span class="o">:</span> <span class="s1">&#39;your-development-appId&#39;</span>
 </span><span class='line'><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-We need to add this new file to our index.html:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>We need to add this new file to our index.html:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/scripts/config.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Now we can inject it into our angular app:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ngCookies&#39;</span><span class="p">,</span> <span class="s1">&#39;ngResource&#39;</span><span class="p">,</span> <span class="s1">&#39;ngSanitize&#39;</span><span class="p">,</span> <span class="s1">&#39;ngRoute&#39;</span><span class="p">,</span> <span class="s1">&#39;facebook&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">]).</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">,</span> <span class="nx">$locationProvider</span><span class="p">,</span> <span class="nx">$httpProvider</span><span class="p">,</span> <span class="nx">$facebookProvider</span><span class="p">,</span> <span class="nx">ENV</span><span class="p">)</span> <span class="p">{</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Finally, in the config of our app (the same place where we init our facebook module),
 we use the ENV constant:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$facebookProvider</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span><span class="nx">appId</span><span class="o">:</span> <span class="nx">ENV</span><span class="p">.</span><span class="nx">appId</span><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
+
+
+<p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
 popup will show that is the right facebook app for your environment.</p>
 ]]></content>
   </entry>
@@ -383,7 +804,7 @@ just minutes every day always improved more rapidly.</p>
 
 
 <p>One of the tools I used in my own daily practice routine was called
-&ldquo;<a href="http://www.learn-guitar-online.com/pentatonicpower.html">Pentatonic Power</a>&rdquo;
+<a href="http://www.learn-guitar-online.com/pentatonicpower.html">Pentatonic Power</a>
 by Bob Murnahan. The thinking is that musicianship is like language&mdash;
 you practice daily on committing to muscle memory the various pieces of
 the language&rsquo;s vocabulary, so that you have at your command the ability to combine
@@ -404,12 +825,12 @@ or even of software engineering and problem-solving in general.</p>
 Programming wrote a <a href="http://codekata.pragprog.com/2007/01/code_kata_backg.html#more">blog post</a> several years back on this same idea, but couched within the notion of a &ldquo;kata&rdquo;, where
 the value of practice is emphasized when learning a creative process. He says,</p>
 
-<p>&ldquo;<em>&hellip;see if you can carve out 45 to 60 minutes to play with a small
+<p>&ldquo;&hellip;see if you can carve out 45 to 60 minutes to play with a small
 piece of code. You don’t necessarily have to look at performance:
 perhaps you could play with the structure, or the memory use, or the
 interface. In the end it doesn’t matter. Experiment, measure, improve.</p>
 
-<p>Practice.</em>&#8221;</p>
+<p>Practice.&#8221;</p>
 
 <p>I didn&rsquo;t have the benefit of the hours of practice that naturally are a
 result of being a computer science major in university while completing class assignments.

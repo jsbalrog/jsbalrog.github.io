@@ -9,8 +9,7 @@
   <meta name="author" content="Ted Jenkins">
 
   
-  <meta name="description" content="As a Open-Source advocate, DRM&mdash;Digital Rights Management, or a way to control access to
-material in digital format&mdash;has long been a &hellip;">
+  <meta name="description" content="For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,6 +94,50 @@ material in digital format&mdash;has long been a &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-16T07:35:00-06:00" pubdate data-updated="true">Jul 16<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
+inheritance, and polymorphism. Javascript of course has no concept of such things as classes; therefore, we use common javascript principles in order to
+take advantage of such things–even for how we define a javascript “object”.
+This post in particular will focus on javascript object creation.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/16/oo-javascript-creating-objects/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a></h1>
     
     
@@ -118,40 +161,18 @@ material in digital format&mdash;has long been a &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>As a Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
+  <div class="entry-content"><p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
 material in digital format&mdash;has long been a sticking point for me. International Day Against
 DRM is Tuesday, May 6th. Several publishing houses are marking this day with great discounts.
 One such publisher that I really like, Packt (pronounced &ldquo;packed&rdquo;) Publishing, is offering
 anything in their catalog for $10 during May 6th. Pretty sweet, huh?</p>
 
-<p><p/>
-Here&rsquo;re the details from
-Packt Publishing&rsquo;s press release:
-<p/>
-&ldquo;Packt Publishing firmly believes that you should be able to read and interact with
-your content when you want, where you want, and how you want – to that end they
-have been advocates of DRM-free content since their very first eBook was published
-back in 2004.
-<p/>
-&#8220;To show their continuing support for <a href="https://www.defectivebydesign.org/dayagainstdrm">
-Day Against DRM</a>, Packt Publishing is offering
-all its DRM-free content at $10 for 24 hours only on May 6th
-eBooks and Videos at www.packtpub.com.
-<p/>
-“&#8217;Our top priority at Packt has always been to meet the evolving needs of developers
-in the most practical way possible, while at the same time protecting the hard work of
-our authors. DRM-free content continues to be instrumental in making that happen,
-providing the flexibility and freedom that is essential for an efficient and enhanced
-learning experience. That’s why we’ve been DRM-free from the beginning – we’ll
-never put limits on the innovation of our users.&lsquo;&rsquo;
-<p/>
-<b>– Dave Maclean, Managing Director<b/>
-<p/>
-&#8220;Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th
-by exploring the full range of DRM-free content at <a href="www.packtpub.com">www.packtpub.com</a>,
-where all eBooks and Videos will be $10 for 24 hours.&rdquo;&#8221;</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/06/stick-it-to-drm/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -187,36 +208,35 @@ where all eBooks and Videos will be $10 for 24 hours.&rdquo;&#8221;</p>
 
   <div class="entry-content"><p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
-<p><p>
-I have an angular-fullstack based app (angular, node, express, passport),
+<p>I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
-rather than cookie-based, using express-jwt and jsonwebtoken.
-<p>
-I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
+rather than cookie-based, using express-jwt and jsonwebtoken.</p>
+
+<p>I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
 replaced its authentication system with tokens (easy enough), then set
 out to include social-based authentication for facebook, using passport-
 facebook. I kept running into CSRF-prevention issues, with the error
-<code>No 'Access-Control-Allow-Origin' header is present on the requested
-resource.</code>
-<p>
-Without going too far off topic, this was due to the fact that
+No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested
+resource.</p>
+
+<p>Without going too far off topic, this was due to the fact that
 I was attempting to make an <code>$http</code> call from the client to a node route
 that I had set up for facebook authentication, rather than simply using
 an anchor tag href call on the client. Ajax calls are particular tricky
 across domain origins. I had to set it up this way because I wanted my
-server to return user info of my making back to the client.
-<p>
-I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
+server to return user info of my making back to the client.</p>
+
+<p>I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
 and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
 each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
-but that shouldn&rsquo;t matter, right?
-<p>
-After searching for nearly two days, I came up with the idea of making
+but that shouldn&rsquo;t matter, right?</p>
+
+<p>After searching for nearly two days, I came up with the idea of making
 auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
 angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here&rsquo;s how to do it.</p>
 
-<p></div>
+</div>
   
   
     <footer>
@@ -376,6 +396,10 @@ post on the topic. I think it covers the subject well: check out Angus Croll&rsq
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a>
       </li>
     
@@ -389,10 +413,6 @@ post on the topic. I think it covers the subject well: check out Angus Croll&rsq
     
       <li class="post">
         <a href="/blog/2013/10/17/promises-in-angular-dot-js/">Promises in Angular.js</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/understanding-closures-in-javascript/">Understanding Closures in Javascript</a>
       </li>
     
   </ul>

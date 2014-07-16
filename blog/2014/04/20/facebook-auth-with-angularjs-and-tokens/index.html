@@ -117,47 +117,50 @@ and I&rsquo; &hellip;">
 
 <div class="entry-content"><p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
-<p><p>
-I have an angular-fullstack based app (angular, node, express, passport),
+<p>I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
-rather than cookie-based, using express-jwt and jsonwebtoken.
-<p>
-I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
+rather than cookie-based, using express-jwt and jsonwebtoken.</p>
+
+<p>I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
 replaced its authentication system with tokens (easy enough), then set
 out to include social-based authentication for facebook, using passport-
 facebook. I kept running into CSRF-prevention issues, with the error
-<code>No 'Access-Control-Allow-Origin' header is present on the requested
-resource.</code>
-<p>
-Without going too far off topic, this was due to the fact that
+No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested
+resource.</p>
+
+<p>Without going too far off topic, this was due to the fact that
 I was attempting to make an <code>$http</code> call from the client to a node route
 that I had set up for facebook authentication, rather than simply using
 an anchor tag href call on the client. Ajax calls are particular tricky
 across domain origins. I had to set it up this way because I wanted my
-server to return user info of my making back to the client.
-<p>
-I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
+server to return user info of my making back to the client.</p>
+
+<p>I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
 and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
 each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
-but that shouldn&rsquo;t matter, right?
-<p>
-After searching for nearly two days, I came up with the idea of making
+but that shouldn&rsquo;t matter, right?</p>
+
+<p>After searching for nearly two days, I came up with the idea of making
 auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
 angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here&rsquo;s how to do it.</p>
 
-<p><!-- more -->
-<h3>Client-side auth with ngFacebook</h3>
-First, install ngFacebook via Bower:</p>
+<!-- more -->
 
-<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>bower install ngFacebook -save</span></code></pre></td></tr></table></div></figure></p>
+
+<h3>Client-side auth with ngFacebook</h3>
+
+<p>First, install ngFacebook via Bower:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bower install ngFacebook -save</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Then, in your angular app.js (or wherever you do your module&rsquo;s config),
 declare &lsquo;facebook&rsquo; as a dependency, and initialize using your Facebook&rsquo;s
 app id, thus:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -171,21 +174,24 @@ app id, thus:</p>
 </span><span class='line'>            <span class="nx">appId</span><span class="o">:</span> <span class="s1">&#39;myFbApplicationId&#39;</span>
 </span><span class='line'>        <span class="p">});</span>
 </span><span class='line'>    <span class="p">}]);</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>(But what about multiple environments? Those FB apps are picky about site URLs.
-More on this in the next section&hellip;)
-<p>
-Now, wherever you plan on having the user do the facebook auth, add the proper
+More on this in the next section&hellip;)</p>
+
+<p>Now, wherever you plan on having the user do the facebook auth, add the proper
 button:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;btn btn-primary btn-large&quot;</span> <span class="na">data-ng-click=</span><span class="s">&quot;loginFacebook()&quot;</span><span class="nt">&gt;</span>Login with Facebook<span class="nt">&lt;/button&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
-Next, in your controller, set up calls to do your facebook logins much the
+
+
+<p>Next, in your controller, set up calls to do your facebook logins much the
 same way you would typically make calls using Facebook&rsquo;s javascript SDK:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -215,16 +221,17 @@ same way you would typically make calls using Facebook&rsquo;s javascript SDK:</
 </span><span class='line'>    <span class="p">});</span>
 </span><span class='line'>  <span class="p">});</span>
 </span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Notice that it&rsquo;s all promised-based goodness. For my purposes, in the result
 of my call to &lsquo;/me&rsquo; I&rsquo;m in turn making an <code>$http</code> call to one of my server routes
 that I have set up for checking for user info/creating a new user in my own
-data store. On a successful return there, I direct the user to the homepage.
-<p>
-For sake of completeness, here&rsquo;s my Auth service method:</p>
+data store. On a successful return there, I direct the user to the homepage.</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>For sake of completeness, here&rsquo;s my Auth service method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -258,20 +265,24 @@ For sake of completeness, here&rsquo;s my Auth service method:</p>
 </span><span class='line'>        <span class="p">});</span>
 </span><span class='line'>      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>So, back to that question of different facebook app id&rsquo;s to account for
 different environments. grunt-ng-constant to the rescue&hellip;</p>
 
-<p><h3>Using grunt-ng-constant</h3>
-First, let&rsquo;s install grunt-ng-constant:</p>
+<h3>Using grunt-ng-constant</h3>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">grunt</span><span class="o">&ndash;</span><span class="nx">ng</span><span class="o">&ndash;</span><span class="nx">constant</span> <span class="o">&mdash;</span><span class="nx">save</span><span class="o">&ndash;</span><span class="nx">dev</span>
+<p>First, let&rsquo;s install grunt-ng-constant:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">grunt</span><span class="o">-</span><span class="nx">ng</span><span class="o">-</span><span class="nx">constant</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span>
 </span></code></pre></td></tr></table></div></figure>
-Next, in your <code>Gruntfile.js</code>, enter the following:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>Next, in your <code>Gruntfile.js</code>, enter the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -331,16 +342,17 @@ Next, in your <code>Gruntfile.js</code>, enter the following:</p>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">},</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>This tells grunt to automatically create a file called config.js under
-the <code>scripts</code> folder.
-<p>
-How do we tell grunt when to create this file? I put mine in the section
+the <code>scripts</code> folder.</p>
+
+<p>How do we tell grunt when to create this file? I put mine in the section
 that tells it to run a local server for development. I added it to the run
 task of the <code>grunt serve</code> task:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -371,9 +383,11 @@ task of the <code>grunt serve</code> task:</p>
 </span><span class='line'>  <span class="p">]);</span>
 </span><span class='line'><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-And then, for grunt production, I added mine to the <code>grunt build</code> task:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>And then, for grunt production, I added mine to the <code>grunt build</code> task:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -383,11 +397,12 @@ And then, for grunt production, I added mine to the <code>grunt build</code> tas
 </span><span class='line'>  <span class="s1">&#39;ngconstant:production&#39;</span><span class="p">,</span>
 </span><span class='line'>  <span class="s1">&#39;bower-install&#39;</span>
 </span><span class='line'><span class="p">]);</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>When grunt runs, a config.js file is created:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -400,25 +415,31 @@ And then, for grunt production, I added mine to the <code>grunt build</code> tas
 </span><span class='line'>  <span class="s1">&#39;appId&#39;</span><span class="o">:</span> <span class="s1">&#39;your-development-appId&#39;</span>
 </span><span class='line'><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-We need to add this new file to our index.html:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+
+<p>We need to add this new file to our index.html:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/scripts/config.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Now we can inject it into our angular app:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ngCookies&#39;</span><span class="p">,</span> <span class="s1">&#39;ngResource&#39;</span><span class="p">,</span> <span class="s1">&#39;ngSanitize&#39;</span><span class="p">,</span> <span class="s1">&#39;ngRoute&#39;</span><span class="p">,</span> <span class="s1">&#39;facebook&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">]).</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$routeProvider</span><span class="p">,</span> <span class="nx">$locationProvider</span><span class="p">,</span> <span class="nx">$httpProvider</span><span class="p">,</span> <span class="nx">$facebookProvider</span><span class="p">,</span> <span class="nx">ENV</span><span class="p">)</span> <span class="p">{</span>
-</span></code></pre></td></tr></table></div></figure></p>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Finally, in the config of our app (the same place where we init our facebook module),
 we use the ENV constant:</p>
 
-<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$facebookProvider</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span><span class="nx">appId</span><span class="o">:</span> <span class="nx">ENV</span><span class="p">.</span><span class="nx">appId</span><span class="p">});</span>
 </span></code></pre></td></tr></table></div></figure>
-And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
+
+
+<p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
 popup will show that is the right facebook app for your environment.</p>
 </div>
 
@@ -492,6 +513,10 @@ popup will show that is the right facebook app for your environment.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a>
       </li>
     
@@ -505,10 +530,6 @@ popup will show that is the right facebook app for your environment.</p>
     
       <li class="post">
         <a href="/blog/2013/10/17/promises-in-angular-dot-js/">Promises in Angular.js</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/17/understanding-closures-in-javascript/">Understanding Closures in Javascript</a>
       </li>
     
   </ul>

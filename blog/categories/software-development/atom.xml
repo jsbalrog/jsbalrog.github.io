@@ -4,7 +4,7 @@
   <title><![CDATA[Category: software-development | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/software-development/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-05-06T08:22:23-06:00</updated>
+  <updated>2014-07-16T08:45:40-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -30,7 +30,7 @@ just minutes every day always improved more rapidly.</p>
 
 
 <p>One of the tools I used in my own daily practice routine was called
-&ldquo;<a href="http://www.learn-guitar-online.com/pentatonicpower.html">Pentatonic Power</a>&rdquo;
+<a href="http://www.learn-guitar-online.com/pentatonicpower.html">Pentatonic Power</a>
 by Bob Murnahan. The thinking is that musicianship is like language&mdash;
 you practice daily on committing to muscle memory the various pieces of
 the language&rsquo;s vocabulary, so that you have at your command the ability to combine
@@ -51,12 +51,12 @@ or even of software engineering and problem-solving in general.</p>
 Programming wrote a <a href="http://codekata.pragprog.com/2007/01/code_kata_backg.html#more">blog post</a> several years back on this same idea, but couched within the notion of a &ldquo;kata&rdquo;, where
 the value of practice is emphasized when learning a creative process. He says,</p>
 
-<p>&ldquo;<em>&hellip;see if you can carve out 45 to 60 minutes to play with a small
+<p>&ldquo;&hellip;see if you can carve out 45 to 60 minutes to play with a small
 piece of code. You don’t necessarily have to look at performance:
 perhaps you could play with the structure, or the memory use, or the
 interface. In the end it doesn’t matter. Experiment, measure, improve.</p>
 
-<p>Practice.</em>"</p>
+<p>Practice."</p>
 
 <p>I didn&rsquo;t have the benefit of the hours of practice that naturally are a
 result of being a computer science major in university while completing class assignments.
