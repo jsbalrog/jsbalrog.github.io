@@ -3,7 +3,7 @@ layout: post
 title: "OO javascript: Creating objects"
 date: 2014-07-16 07:35
 comments: true
-categories:
+categories: [programming, javascript]
 ---
 For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
 inheritance, and polymorphism. Javascript of course has no concept of such things as classes; therefore, we use common javascript principles in order to

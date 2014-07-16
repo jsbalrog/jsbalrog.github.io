@@ -3,7 +3,7 @@ layout: post
 title: "Stick it to DRM"
 date: 2014-05-06 08:10
 comments: true
-categories:
+categories: [announcements]
 ---
 As an Open-Source advocate, DRM--<em>Digital Rights Management</em>, or a way to control access to
 material in digital format--has long been a sticking point for me. International Day Against
@@ -18,22 +18,16 @@ Packt Publishing's press release:
 "Packt Publishing firmly believes that you should be able to read and interact with
 your content when you want, where you want, and how you want – to that end they
 have been advocates of DRM-free content since their very first eBook was published
-back in 2004.
+back in 2004."
 
-To show their continuing support for <a href="https://www.defectivebydesign.org/dayagainstdrm">
-Day Against DRM</a>, Packt Publishing is offering
-all its DRM-free content at $10 for 24 hours only on May 6th
-eBooks and Videos at www.packtpub.com.
+"To show their continuing support for [Day Against DRM](https://www.defectivebydesign.org/dayagainstdrm),
+Packt Publishing is offering all its DRM-free content at $10 for 24 hours only on May
+6th eBooks and Videos at www.packtpub.com."
 
-Our top priority at Packt has always been to meet the evolving needs of developers
-in the most practical way possible, while at the same time protecting the hard work of
-our authors. DRM-free content continues to be instrumental in making that happen,
-providing the flexibility and freedom that is essential for an efficient and enhanced
-learning experience. That’s why we’ve been DRM-free from the beginning – we’ll
-never put limits on the innovation of our users.
+"Our top priority at Packt has always been to meet the evolving needs of developers in the most practical way possible, while at the same time protecting the hard work of
+our authors. DRM-free content continues to be instrumental in making that happen, providing the flexibility and freedom that is essential for an efficient and enhanced
+learning experience. That’s why we’ve been DRM-free from the beginning – we’ll never put limits on the innovation of our users."
 
 – Dave Maclean, Managing Director
 
-Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th
-by exploring the full range of DRM-free content at <a href="www.packtpub.com">www.packtpub.com</a>,
-where all eBooks and Videos will be $10 for 24 hours."
+Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th by exploring the full range of DRM-free content at [packtpub.com](http://www.packtpub.com), where all eBooks and Videos will be $10 for 24 hours.

@@ -3,7 +3,7 @@ layout: post
 title: "Promises in Angular.js"
 date: 2013-10-17 21:43
 comments: true
-categories: javascript, angular
+categories: [programming, javascript, angularjs]
 ---
 One of the hardest things for me to grok in JavaScript was promise-based style
 handling of the async nature of the language.
@@ -23,7 +23,7 @@ sad:
 ```javascript
 var Person = function(name) {
   this.success = function(reason) {
-    console.log(name + " is happy because " + reason);    
+    console.log(name + " is happy because " + reason);
   };
 
   this.error = function(reason) {
@@ -93,5 +93,5 @@ var itemDelivered = amazon.takeOrder('Nexus 7');
 itemDelivered.then(fred.success, fred.error);
 amazon.problemWithOrder('Nexus 7 is no longer in stock!');
 ```
-<em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor. 
+<em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor.
 See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">"Promises in AngularJS, Explained as a Cartoon"</a>.

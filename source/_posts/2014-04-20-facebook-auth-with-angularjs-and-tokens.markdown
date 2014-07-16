@@ -3,7 +3,7 @@ layout: post
 title: "Facebook auth with Angularjs and tokens"
 date: 2014-04-20 19:28
 comments: true
-categories:
+categories: [programming, angularjs]
 ---
 (For full example code, see my [angular-fullstack-tokens repo](https://github.com/jsbalrog/angular-fullstack-tokens).)
 

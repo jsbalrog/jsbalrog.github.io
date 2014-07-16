@@ -3,7 +3,7 @@ layout: post
 title: "Coding == Practice"
 date: 2013-10-19 12:41
 comments: true
-categories: software-development
+categories: [programming]
 ---
 In my other life I'm a musician--a guitarist who plays in a band.
 I used to tell my guitar students that it takes literally miles
