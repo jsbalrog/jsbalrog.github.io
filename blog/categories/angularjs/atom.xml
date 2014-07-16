@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: angularjs | JS Balrog]]></title>
+  <link href="http://jsbalrog.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
+  <link href="http://jsbalrog.github.io/"/>
+  <updated>2014-07-16T09:35:32-06:00</updated>
+  <id>http://jsbalrog.github.io/</id>
+  <author>
+    <name><![CDATA[Ted Jenkins]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Facebook auth with Angularjs and tokens]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/"/>
+    <updated>2014-04-20T19:28:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
+    <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
+
+<p>I have an angular-fullstack based app (angular, node, express, passport),
+and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
+rather than cookie-based, using express-jwt and jsonwebtoken.</p>
+
+<p>I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
+replaced its authentication system with tokens (easy enough), then set
+out to include social-based authentication for facebook, using passport-
+facebook. I kept running into CSRF-prevention issues, with the error
+No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested
+resource.</p>
+
+<p>Without going too far off topic, this was due to the fact that
+I was attempting to make an <code>$http</code> call from the client to a node route
+that I had set up for facebook authentication, rather than simply using
+an anchor tag href call on the client. Ajax calls are particular tricky
+across domain origins. I had to set it up this way because I wanted my
+server to return user info of my making back to the client.</p>
+
+<p>I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
+and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
+each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
+but that shouldn&rsquo;t matter, right?</p>
+
+<p>After searching for nearly two days, I came up with the idea of making
+auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
+angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
+Here&rsquo;s how to do it.</p>
+
+<!-- more -->
+
+
+<h3>Client-side auth with ngFacebook</h3>
+
+<p>First, install ngFacebook via Bower:</p>
+
+<p><code>
+bower install ngFacebook -save
+</code></p>
+
+<p>Then, in your angular app.js (or wherever you do your module&rsquo;s config),
+declare &lsquo;facebook&rsquo; as a dependency, and initialize using your Facebook&rsquo;s
+app id, thus:</p>
+
+<p>```javascript
+angular</p>
+
+<pre><code>.module('my-angularjs-app', ['facebook'])
+.config(['$facebookProvider', function($facebookProvider) {
+    $facebookProvider.init({
+        appId: 'myFbApplicationId'
+    });
+}]);
+</code></pre>
+
+<p>```</p>
+
+<p>(But what about multiple environments? Those FB apps are picky about site URLs.
+More on this in the next section&hellip;)</p>
+
+<p>Now, wherever you plan on having the user do the facebook auth, add the proper
+button:</p>
+
+<p><code>html
+&lt;button type="button" class="btn btn-primary btn-large" data-ng-click="loginFacebook()"&gt;Login with Facebook&lt;/button&gt;
+</code>
+Next, in your controller, set up calls to do your facebook logins much the
+same way you would typically make calls using Facebook&rsquo;s javascript SDK:</p>
+
+<p>```javascript
+$scope.loginFacebook = function() {
+  $facebook.login({scope:&lsquo;email&rsquo;}).then(function(response) {</p>
+
+<pre><code>$scope.me();
+</code></pre>
+
+<p>  },
+  function(response) {</p>
+
+<pre><code>console.log("Error!", response);
+</code></pre>
+
+<p>  });
+};
+$scope.me = function() {
+  $facebook.api(&lsquo;/me&rsquo;, {fields: &lsquo;id, name, email, username&rsquo;}).then(function(response) {</p>
+
+<pre><code>Auth.loginFacebook(response).then(function() {
+  $location.path('/');
+});
+</code></pre>
+
+<p>  });
+};
+```</p>
+
+<p>Notice that it&rsquo;s all promised-based goodness. For my purposes, in the result
+of my call to &lsquo;/me&rsquo; I&rsquo;m in turn making an <code>$http</code> call to one of my server routes
+that I have set up for checking for user info/creating a new user in my own
+data store. On a successful return there, I direct the user to the homepage.</p>
+
+<p>For sake of completeness, here&rsquo;s my Auth service method:</p>
+
+<p>```javascript
+loginFacebook: function(user, callback) {</p>
+
+<pre><code>  var deferred = $q.defer(),
+      cb = callback || angular.noop;
+  console.log("here", user);
+  $http.post('/login/facebook', user)
+    .success(function(data) {
+      $window.sessionStorage.token = data.token;
+      // Do something with the user here
+      deferred.resolve(profile);
+    })
+    .error(function(data) {
+      delete $window.sessionStorage.token;
+      // Do something else here
+      deferred.reject($rootScope.currentUser);
+    });
+  return deferred.promise;
+}
+</code></pre>
+
+<p>```</p>
+
+<p>So, back to that question of different facebook app id&rsquo;s to account for
+different environments. grunt-ng-constant to the rescue&hellip;</p>
+
+<h3>Using grunt-ng-constant</h3>
+
+<p>First, let&rsquo;s install grunt-ng-constant:</p>
+
+<p><code>
+npm install grunt-ng-constant --save-dev
+</code>
+Next, in your <code>Gruntfile.js</code>, enter the following:</p>
+
+<p>```javascript
+// constants
+ngconstant: {
+  // Options for all targets
+  options: {</p>
+
+<pre><code>name: 'config',
+</code></pre>
+
+<p>  },
+  // Environment targets
+  development: {</p>
+
+<pre><code>options: {
+  dest: '&lt;%= yeoman.app %&gt;/scripts/config.js'
+},
+constants: {
+  ENV: {
+    name: 'facebook',
+    appId: 'YOUR_APP_ID'
+  }
+}
+</code></pre>
+
+<p>  },
+  production: {</p>
+
+<pre><code>options: {
+  dest: '&lt;%= yeoman.dist %&gt;/scripts/config.js'
+},
+constants: {
+  ENV: {
+    name: 'facebook',
+    appId: 'YOUR_PROD_APP_ID'
+  }
+}
+</code></pre>
+
+<p>  }
+},
+```</p>
+
+<p>This tells grunt to automatically create a file called config.js under
+the <code>scripts</code> folder.</p>
+
+<p>How do we tell grunt when to create this file? I put mine in the section
+that tells it to run a local server for development. I added it to the run
+task of the <code>grunt serve</code> task:</p>
+
+<p>```javascript
+grunt.registerTask(&lsquo;serve&rsquo;, function (target) {
+  if (target === &lsquo;dist&rsquo;) {</p>
+
+<pre><code>return grunt.task.run(['build', 'connect:dist:keepalive']);
+</code></pre>
+
+<p>  }</p>
+
+<p>  grunt.task.run([</p>
+
+<pre><code>'clean:server',
+'ngconstant:development',
+'bower-install',
+'concurrent:server',
+'autoprefixer',
+'connect:livereload',
+'watch'
+</code></pre>
+
+<p>  ]);
+});
+<code>``
+And then, for grunt production, I added mine to the</code>grunt build` task:</p>
+
+<p><code>javascript
+grunt.registerTask('build', [
+  'clean:dist',
+  'ngconstant:production',
+  'bower-install'
+]);
+</code></p>
+
+<p>When grunt runs, a config.js file is created:</p>
+
+<p>```javascript
+angular.module(&lsquo;config&rsquo;, [])</p>
+
+<p>.constant(&lsquo;ENV&rsquo;, {
+  &lsquo;name&rsquo;: &lsquo;facebook&rsquo;,
+  &lsquo;appId&rsquo;: &lsquo;your-development-appId&rsquo;
+});
+```
+We need to add this new file to our index.html:</p>
+
+<p>```html</p>
+
+<script src="http://jsbalrog.github.io/scripts/config.js"></script>
+
+
+<p>```</p>
+
+<p>Now we can inject it into our angular app:</p>
+
+<p><code>javascript
+angular.module('myApp', ['ngCookies', 'ngResource', 'ngSanitize', 'ngRoute', 'facebook', 'config']).config(function ($routeProvider, $locationProvider, $httpProvider, $facebookProvider, ENV) {
+</code></p>
+
+<p>Finally, in the config of our app (the same place where we init our facebook module),
+we use the ENV constant:</p>
+
+<p><code>javascript
+$facebookProvider.init({appId: ENV.appId});
+</code></p>
+
+<p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
+popup will show that is the right facebook app for your environment.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Promises in Angular.js]]></title>
+    <link href="http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js/"/>
+    <updated>2013-10-17T21:43:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js</id>
+    <content type="html"><![CDATA[<p>One of the hardest things for me to grok in JavaScript was promise-based style
+handling of the async nature of the language.
+I understood the async JavaScript just fine, and could wield callbacks
+like a banshee. However, promise-based structures provided a more elegant solution
+than callbacks&mdash;particularly when you were several calls deep. I will describe
+what I learned in the context of Angular, as it has a very simple yet elegant
+implementation of promises in its $q library.</p>
+
+<!-- more -->
+
+
+<p>First, imagine we have a function for a person. We will define two callbacks for
+this person: one for what success for them would be, and one for what their
+life&rsquo;s error condition would look like. We&rsquo;ll assume they are either happy or
+sad:</p>
+
+<p>```javascript
+var Person = function(name) {
+  this.success = function(reason) {</p>
+
+<pre><code>console.log(name + " is happy because " + reason);
+</code></pre>
+
+<p>  };</p>
+
+<p>  this.error = function(reason) {</p>
+
+<pre><code>console.log(name + " is sad because " + reason);
+</code></pre>
+
+<p>  };
+};
+```</p>
+
+<p>Next, we&rsquo;ll create this person:</p>
+
+<p><code>javascript
+var fred = new Person("Fred");
+</code></p>
+
+<p>We now need to define a task that needs to be accomplished in the future. We&rsquo;ll
+say it&rsquo;s a delivery of shiny new roller stakes from Amazon. Receiving them
+would be a success, and thus make Fred happy. Having them not delivered would
+be an error, and thus make Fred really sad.</p>
+
+<p>To do so, we&rsquo;ll create a task using $q&rsquo;s defer() method. This creates a
+deferred object, which holds the future task execution:</p>
+
+<p><code>javascript
+var task = $q.defer();
+</code></p>
+
+<p>This future task object has a promise object as a property; it is the placeholder
+for the results of the task&rsquo;s execution:</p>
+
+<p><code>javascript
+var results = task.promise;
+</code>
+We then set up the order of events, using &ldquo;promise, then&rdquo; syntax. This takes the
+place of passing callback(s) to the task method, and having the task method have to call
+them when complete.</p>
+
+<p><code>javascript
+results.then(fred.success, fred.error);
+</code>
+We can then have the task programmatically succeed or fail depending on whatever
+arbitrary logic we choose. $q&rsquo;s parlance is &ldquo;resolve&rdquo; or &ldquo;reject&rdquo;.</p>
+
+<p>If we succeed:</p>
+
+<p><code>javascript
+task.resolve("Roller skates from Amazon have arrived");
+</code>
+&hellip;the appropriate &ldquo;happy&rdquo; success method is called. Conversely, if we fail:</p>
+
+<p><code>javascript
+task.reject("Roller skates from Amazon are backordered");
+</code>
+&hellip;the appropriate &ldquo;sad&rdquo; error method is called.</p>
+
+<p>This is a pretty simple example, one that maybe unneccessarily takes on a lot of
+overhead for promises. But you can see how if we now introduce other objects&mdash;say
+an Amazon online store that has takeOrder, deliverOrder, and problemWithOrder
+methods&mdash;using promises could avoid multiple levels of callback heck. The takeOrder
+method could take an argument of ordered items, and set up a current order that
+had an items property as well as a task deferred object. Instead of returning the
+order, it simply returns the promise property of the task deferred object, which
+is used to call then() on:</p>
+
+<p><code>javascript
+var amazon = new MailOrder($q);
+var itemDelivered = amazon.takeOrder('Nexus 7');
+itemDelivered.then(fred.success, fred.error);
+amazon.problemWithOrder('Nexus 7 is no longer in stock!');
+</code>
+<em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor.
+See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">&ldquo;Promises in AngularJS, Explained as a Cartoon&rdquo;</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>
