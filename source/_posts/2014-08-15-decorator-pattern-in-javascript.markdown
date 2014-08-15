@@ -6,7 +6,7 @@ comments: true
 categories: [programming, javascript]
 ---
 Last time I mentioned I was going to focus on some OO-related javascript concerns.
-For this post, I want to talk about a programming pattern that I was quite often:
+For this post, I want to talk about a programming pattern that I use quite often:
 the Decorator pattern.
 
 <!-- more -->
