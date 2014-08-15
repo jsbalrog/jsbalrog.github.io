@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-07-16T09:35:32-06:00</updated>
+  <updated>2014-08-15T13:25:30-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,139 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Decorator pattern in JavaScript]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript/"/>
+    <updated>2014-08-15T12:29:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript</id>
+    <content type="html"><![CDATA[<p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
+For this post, I want to talk about a programming pattern that I was quite often:
+the Decorator pattern.</p>
+
+<!-- more -->
+
+
+<p>The Decorator pattern is defined as &ldquo;a design pattern that allows behavior to be
+added to an individual object, either statically or dynammically, without affecting
+the behavior of other objects from the same class.&rdquo; <a href="https://http://en.wikipedia.org/wiki/Decorator_pattern">(source)</a></p>
+
+<p>What this means in plain english is that we can extend an object&rsquo;s functionality&mdash;
+even at runtime&mdash;and even with multiple decorators. This is pretty common in the
+&lsquo;classical&rsquo; OO world of, say, java. Here&rsquo;s how we&rsquo;d do it prototypically in
+javascript.</p>
+
+<p>Let&rsquo;s say that we&rsquo;ve got a Guitar store shopping cart written in javascript. At
+checkout time the user can select various options or upgrades to add to their
+guitar. We will implement these options as decorators.</p>
+
+<p>First, the guitar model. It will manage a list of decorators. Here&rsquo;s the constructor:</p>
+
+<p>```javascript
+function Guitar(price) {</p>
+
+<pre><code>this.price = price || 699;
+this.decoratorsList = [];
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Next, the decorators themselves. Decorators will be implemented as properties of
+<code>Guitar.decorators</code>.</p>
+
+<p><code>javascript
+Guitar.decorators = {};
+</code></p>
+
+<p>Now, we add the various decorator properties. These are the options/upgrades the
+user can select.</p>
+
+<p>```javascript
+// Ebony fretboard option: $100
+Guitar.decorators.ebonyFretboard = {
+  getPrice: function(price) {</p>
+
+<pre><code>return price + 100;
+</code></pre>
+
+<p>  }
+};</p>
+
+<p>// Mother of pearl inlay option: $75
+Guitar.decorators.motherOfPearlInlays = {
+  getPrice: function(price) {</p>
+
+<pre><code>return price + 75;
+</code></pre>
+
+<p>  }
+};</p>
+
+<p>// Gold hardware option: $50
+Guitar.decorators.goldHardware = {
+  getPrice: function(price) {</p>
+
+<pre><code>return price + 50;
+</code></pre>
+
+<p>  }
+};
+```</p>
+
+<p>Here&rsquo;s the Guitar&rsquo;s decorate method. This is the method called at runtime, and
+it simply pushes each decorator onto the guitar&rsquo;s <code>decoratorList</code>.</p>
+
+<p><code>javascript
+Guitar.prototype.decorate = function(decorator) {
+  this.decoratorsList.push(decorator);
+  return this;
+};
+</code></p>
+
+<p>Notice that we return the guitar instance. This is so we can chain decorator calls.</p>
+
+<p>Finally, our <code>getPrice()</code> method for our shopping cart checkout. It simply goes
+through a list of decorators and calls each decorator&rsquo;s <code>getPrice()</code> method, passing
+the results from the previous call.</p>
+
+<p>```javascript
+Guitar.prototype.getPrice = function() {
+  var price = this.price,</p>
+
+<pre><code>i,
+max = this.decoratorsList.length,
+name;
+</code></pre>
+
+<p>  for (i = 0; i &lt; max; i++) {</p>
+
+<pre><code>name = this.decoratorsList[i];
+price = Guitar.decorators[name].getPrice(price);
+</code></pre>
+
+<p>  }
+  return price;
+};
+```</p>
+
+<p>That&rsquo;s all there is to it. Here&rsquo;s the client code in action. We&rsquo;ll create a couple
+of guitars and print out the price.</p>
+
+<p>```javascript
+var fender = new Guitar(499);
+fender.decorate(&lsquo;goldHardware&rsquo;);
+console.log(fender.getPrice()); // 549</p>
+
+<p>var takamine = new Guitar();
+takamine.decorate(&lsquo;motherOfPearlInlays&rsquo;).decorate(&lsquo;ebonyFretboard&rsquo;);
+console.log(takamine.getPrice()); // 874
+```</p>
+
+<p>This ought to whet your appetite for finding other uses for the decorator pattern
+in your code.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OO javascript: Creating objects]]></title>
@@ -746,16 +879,6 @@ amazon.problemWithOrder('Nexus 7 is no longer in stock!');
 </code>
 <em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor.
 See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">&ldquo;Promises in AngularJS, Explained as a Cartoon&rdquo;</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Understanding Closures In Javascript]]></title>
-    <link href="http://jsbalrog.github.io/blog/2013/10/17/understanding-closures-in-javascript/"/>
-    <updated>2013-10-17T09:06:00-06:00</updated>
-    <id>http://jsbalrog.github.io/blog/2013/10/17/understanding-closures-in-javascript</id>
-    <content type="html"><![CDATA[<p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
-post on the topic. I think it covers the subject well: check out Angus Croll&rsquo;s &ldquo;<a href="http://javascriptweblog.wordpress.com/2010/10/25/understanding-javascript-closures/">Understanding JavaScript Closures</a>&rdquo;.</p>
 ]]></content>
   </entry>
   

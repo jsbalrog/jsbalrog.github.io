@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-07-16T09:35:32-06:00</updated>
+  <updated>2014-08-15T13:25:30-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,170 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Decorator pattern in JavaScript]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript/"/>
+    <updated>2014-08-15T12:29:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript</id>
+    <content type="html"><![CDATA[<p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
+For this post, I want to talk about a programming pattern that I was quite often:
+the Decorator pattern.</p>
+
+<!-- more -->
+
+
+<p>The Decorator pattern is defined as &ldquo;a design pattern that allows behavior to be
+added to an individual object, either statically or dynammically, without affecting
+the behavior of other objects from the same class.&rdquo; <a href="https://http://en.wikipedia.org/wiki/Decorator_pattern">(source)</a></p>
+
+<p>What this means in plain english is that we can extend an object&rsquo;s functionality&mdash;
+even at runtime&mdash;and even with multiple decorators. This is pretty common in the
+&lsquo;classical&rsquo; OO world of, say, java. Here&rsquo;s how we&rsquo;d do it prototypically in
+javascript.</p>
+
+<p>Let&rsquo;s say that we&rsquo;ve got a Guitar store shopping cart written in javascript. At
+checkout time the user can select various options or upgrades to add to their
+guitar. We will implement these options as decorators.</p>
+
+<p>First, the guitar model. It will manage a list of decorators. Here&rsquo;s the constructor:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Guitar</span><span class="p">(</span><span class="nx">price</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">price</span> <span class="o">=</span> <span class="nx">price</span> <span class="o">||</span> <span class="mi">699</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">decoratorsList</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, the decorators themselves. Decorators will be implemented as properties of
+<code>Guitar.decorators</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">decorators</span> <span class="o">=</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, we add the various decorator properties. These are the options/upgrades the
+user can select.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Ebony fretboard option: $100</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">decorators</span><span class="p">.</span><span class="nx">ebonyFretboard</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">getPrice</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">price</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">price</span> <span class="o">+</span> <span class="mi">100</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Mother of pearl inlay option: $75</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">decorators</span><span class="p">.</span><span class="nx">motherOfPearlInlays</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">getPrice</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">price</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">price</span> <span class="o">+</span> <span class="mi">75</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Gold hardware option: $50</span>
+</span><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">decorators</span><span class="p">.</span><span class="nx">goldHardware</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">getPrice</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">price</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">price</span> <span class="o">+</span> <span class="mi">50</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here&rsquo;s the Guitar&rsquo;s decorate method. This is the method called at runtime, and
+it simply pushes each decorator onto the guitar&rsquo;s <code>decoratorList</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">decorate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">decorator</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">decoratorsList</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">decorator</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice that we return the guitar instance. This is so we can chain decorator calls.</p>
+
+<p>Finally, our <code>getPrice()</code> method for our shopping cart checkout. It simply goes
+through a list of decorators and calls each decorator&rsquo;s <code>getPrice()</code> method, passing
+the results from the previous call.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Guitar</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getPrice</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">price</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">price</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">i</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">max</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">decoratorsList</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">max</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">decoratorsList</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+</span><span class='line'>    <span class="nx">price</span> <span class="o">=</span> <span class="nx">Guitar</span><span class="p">.</span><span class="nx">decorators</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">getPrice</span><span class="p">(</span><span class="nx">price</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">price</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s all there is to it. Here&rsquo;s the client code in action. We&rsquo;ll create a couple
+of guitars and print out the price.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">fender</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">(</span><span class="mi">499</span><span class="p">);</span>
+</span><span class='line'><span class="nx">fender</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="s1">&#39;goldHardware&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">fender</span><span class="p">.</span><span class="nx">getPrice</span><span class="p">());</span> <span class="c1">// 549</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">takamine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Guitar</span><span class="p">();</span>
+</span><span class='line'><span class="nx">takamine</span><span class="p">.</span><span class="nx">decorate</span><span class="p">(</span><span class="s1">&#39;motherOfPearlInlays&#39;</span><span class="p">).</span><span class="nx">decorate</span><span class="p">(</span><span class="s1">&#39;ebonyFretboard&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">takamine</span><span class="p">.</span><span class="nx">getPrice</span><span class="p">());</span> <span class="c1">// 874</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This ought to whet your appetite for finding other uses for the decorator pattern
+in your code.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OO javascript: Creating objects]]></title>
