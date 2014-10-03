@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-08-15T13:28:12-06:00</updated>
+  <updated>2014-10-03T16:31:01-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,236 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Talkin' 'bout angular directives]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives/"/>
+    <updated>2014-10-03T15:37:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives</id>
+    <content type="html"><![CDATA[<p>In this post, let’s take a look at the power of directives, and in particular,
+the power of isolate scope-based directives.</p>
+
+<!-- more -->
+
+
+<h3>In the beginning</h3>
+
+<p>Let’s start with this use case: I’ve got a list of friends and I want to list out
+their name and their hobby. The html looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li&gt;</span>My name is , I play the .<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;And here&rsquo;s the controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="err">‘</span><span class="nx">myApp</span><span class="err">’</span><span class="p">,</span> <span class="p">[])</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="err">‘</span><span class="nx">MyCtrl</span><span class="err">’</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="k">this</span><span class="p">.</span><span class="nx">friends</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>          <span class="p">{</span> <span class="err">‘</span><span class="nx">name</span><span class="err">’</span><span class="o">:</span> <span class="err">‘</span><span class="nx">Fred</span><span class="err">’</span><span class="p">,</span> <span class="err">‘</span><span class="nx">hobby</span><span class="err">’</span><span class="o">:</span> <span class="err">‘</span><span class="nx">kazoo</span><span class="err">’</span> <span class="p">},</span>
+</span><span class='line'>          <span class="p">{</span> <span class="err">‘</span><span class="nx">name</span><span class="err">’</span><span class="o">:</span> <span class="err">‘</span><span class="nx">Eliot</span><span class="err">’</span><span class="p">,</span> <span class="err">‘</span><span class="nx">hobby</span><span class="err">’</span><span class="o">:</span> <span class="err">‘</span><span class="nx">harp</span><span class="err">’</span> <span class="p">}</span>
+</span><span class='line'>     <span class="p">];</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pretty straightforward. Well, let&rsquo;s add to the use case: I want to be able to
+“cool-i-fy” any friend in the list by clicking them—no matter who I click,
+I want their name to be upgraded to “B.B. King” and their hobby upgraded to
+“guitar”. Instant coolness!</p>
+
+<p>So, I do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>...
+</span><span class='line'><span class="nt">&lt;li</span> <span class="na">ng-click=</span><span class="s">“main.coolifyMe(friend)”</span><span class="nt">&gt;</span>My name is , I play the .<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&hellip;and the corresponding method in the controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">coolifyMe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>     <span class="nx">friend</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="err">“</span><span class="nx">B</span><span class="p">.</span><span class="nx">B</span><span class="p">.</span> <span class="nx">King</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'>     <span class="nx">friend</span><span class="p">.</span><span class="nx">hobby</span> <span class="o">=</span> <span class="err">“</span><span class="nx">guitar</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Still straightforward, and works well.</p>
+
+<h3>Enter: A custom directive</h3>
+
+<p>But wait, I want this to be available throughout my app,
+anywhere I’ve got a list of friends. And I show a list of friends 24 different places.
+Sounds like a job for a reusable custom directive!</p>
+
+<p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
+Here’s what the html looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;coolness</span><span class="na">-dir</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
+our directive:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="err">‘</span><span class="nx">coolnessDir</span><span class="err">’</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="err">‘</span><span class="nx">E</span><span class="err">’</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">scope</span><span class="p">.</span><span class="nx">coolifyMe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="err">“</span><span class="nx">B</span><span class="p">.</span><span class="nx">B</span><span class="p">.</span> <span class="nx">King</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">hobby</span> <span class="o">=</span> <span class="err">“</span><span class="nx">guitar</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I rip the <code>coolifyMe</code> function out of the controller altogether. Notice that the <code>coolifyMe</code>
+method in the directive’s <code>link</code> function (I have a <code>link</code> function because we’re manipulating
+  the DOM) looks nearly identical to our old method.</p>
+
+<p>Okay, everything’s good. Works like a champ.</p>
+
+<h3>A problem arises</h3>
+
+<p>But wait. There is a list where I want to use this directive, but it looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>...
+</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">ng-repeat=</span><span class="s">“foo</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What’s this <code>foo</code> business? My directive code template refers to <code>friend.name</code> and
+<code>friend.hobby</code>—-this will break!</p>
+
+<h3>Isolate scope to the rescue!</h3>
+
+<p>Isolate scope comes to the rescue here—it allows us to seal off the directive from
+ the enclosing scope(s), and “poke holes” selectively to allow certain values through,
+ while also allowing us to redefine those values. We’re going to make sure that whatever
+ value gets through to our directive’s template, it’s called <code>friend</code>!</p>
+
+<p>First, here’s what our html looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>...
+</span><span class='line'><span class="nt">&lt;ul</span> <span class="na">ng-repeat=</span><span class="s">“foo</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>     <span class="nt">&lt;coolness</span><span class="na">-dir</span> <span class="na">friend=</span><span class="s">“foo”</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice that we added an attribute to our directive: <code>friend</code>. This is the hole
+through to the directive. Speaking of which, here’s the code now:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="err">‘</span><span class="nx">coolnessDir</span><span class="err">’</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="err">‘</span><span class="nx">E</span><span class="err">’</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">friend</span><span class="o">:</span> <span class="err">‘</span><span class="o">=</span><span class="err">‘</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
+</span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">scope</span><span class="p">.</span><span class="nx">coolifyMe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="err">“</span><span class="nx">B</span><span class="p">.</span><span class="nx">B</span><span class="p">.</span> <span class="nx">King</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">hobby</span> <span class="o">=</span> <span class="err">“</span><span class="nx">guitar</span><span class="err">”</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice how we have a scope property now, and we define a key <code>friend</code>, which matches
+our attribute name that we added. The equals sign says “we want to two-way data
+bind this, and furthermore, do it as the same name: <code>friend</code>&ldquo;.</p>
+
+<p>Now, we can easily use this directive wherever—-all we need to do is change the
+attribute <code>friend=</code> to be whatever <code>ng-repeat</code> sets the value to!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Decorator pattern in JavaScript]]></title>

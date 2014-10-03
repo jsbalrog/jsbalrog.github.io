@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-08-15T13:28:12-06:00</updated>
+  <updated>2014-10-03T16:31:01-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,195 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Talkin' 'bout angular directives]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives/"/>
+    <updated>2014-10-03T15:37:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives</id>
+    <content type="html"><![CDATA[<p>In this post, let’s take a look at the power of directives, and in particular,
+the power of isolate scope-based directives.</p>
+
+<!-- more -->
+
+
+<h3>In the beginning</h3>
+
+<p>Let’s start with this use case: I’ve got a list of friends and I want to list out
+their name and their hobby. The html looks like this:</p>
+
+<p>``` html</p>
+
+<div ng-controller=“MyCtrl as main”>
+  <ul ng-repeat=“friend in main.friends”>
+    <li>My name is , I play the .</li>
+  </ul>
+</div>
+
+
+<p>```</p>
+
+<p>&hellip;And here&rsquo;s the controller:</p>
+
+<p>``` js
+angular.module(‘myApp’, [])
+  .controller(‘MyCtrl’, function() {</p>
+
+<pre><code> this.friends = [
+      { ‘name’: ‘Fred’, ‘hobby’: ‘kazoo’ },
+      { ‘name’: ‘Eliot’, ‘hobby’: ‘harp’ }
+ ];
+</code></pre>
+
+<p>});
+```</p>
+
+<p>Pretty straightforward. Well, let&rsquo;s add to the use case: I want to be able to
+“cool-i-fy” any friend in the list by clicking them—no matter who I click,
+I want their name to be upgraded to “B.B. King” and their hobby upgraded to
+“guitar”. Instant coolness!</p>
+
+<p>So, I do something like this:</p>
+
+<p><code>html
+...
+&lt;li ng-click=“main.coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;
+...
+</code></p>
+
+<p>&hellip;and the corresponding method in the controller:</p>
+
+<p>``` js
+this.coolifyMe = function(friend) {</p>
+
+<pre><code> friend.name = “B.B. King”;
+ friend.hobby = “guitar”;
+</code></pre>
+
+<p>};
+```</p>
+
+<p>Still straightforward, and works well.</p>
+
+<h3>Enter: A custom directive</h3>
+
+<p>But wait, I want this to be available throughout my app,
+anywhere I’ve got a list of friends. And I show a list of friends 24 different places.
+Sounds like a job for a reusable custom directive!</p>
+
+<p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
+Here’s what the html looks like:</p>
+
+<p>``` html</p>
+
+<div ng-controller=“MyCtrl as main”>
+  <ul ng-repeat=“friend in main.friends”>
+    <coolness-dir></coolness-dir>
+  </ul>
+</div>
+
+
+<p>```</p>
+
+<p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
+our directive:</p>
+
+<p>``` js
+.directive(‘coolnessDir’, function() {
+  return {</p>
+
+<pre><code>restrict: ‘E’,
+replace: true,
+template: ‘&lt;li ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
+link: function(scope, elem, attrs) {
+  scope.coolifyMe = function(friend) {
+    friend.name = “B.B. King”;
+    friend.hobby = “guitar”;
+  }
+}
+</code></pre>
+
+<p>  }
+});
+```</p>
+
+<p>I rip the <code>coolifyMe</code> function out of the controller altogether. Notice that the <code>coolifyMe</code>
+method in the directive’s <code>link</code> function (I have a <code>link</code> function because we’re manipulating
+  the DOM) looks nearly identical to our old method.</p>
+
+<p>Okay, everything’s good. Works like a champ.</p>
+
+<h3>A problem arises</h3>
+
+<p>But wait. There is a list where I want to use this directive, but it looks like this:</p>
+
+<p>``` html
+&hellip;</p>
+
+<ul ng-repeat=“foo in main.friends”>
+...
+</ul>
+
+
+<p>&hellip;
+```</p>
+
+<p>What’s this <code>foo</code> business? My directive code template refers to <code>friend.name</code> and
+<code>friend.hobby</code>—-this will break!</p>
+
+<h3>Isolate scope to the rescue!</h3>
+
+<p>Isolate scope comes to the rescue here—it allows us to seal off the directive from
+ the enclosing scope(s), and “poke holes” selectively to allow certain values through,
+ while also allowing us to redefine those values. We’re going to make sure that whatever
+ value gets through to our directive’s template, it’s called <code>friend</code>!</p>
+
+<p>First, here’s what our html looks like:</p>
+
+<p>``` html
+&hellip;</p>
+
+<ul ng-repeat=“foo in main.friends”>
+     <coolness-dir friend=“foo”></coolness-dir>
+</ul>
+
+
+<p>&hellip;
+```</p>
+
+<p>Notice that we added an attribute to our directive: <code>friend</code>. This is the hole
+through to the directive. Speaking of which, here’s the code now:</p>
+
+<p>``` js
+.directive(‘coolnessDir’, function() {
+  return {</p>
+
+<pre><code>restrict: ‘E’,
+replace: true,
+scope: {
+  friend: ‘=‘
+},
+template: ‘&lt;li ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
+link: function(scope, elem, attrs) {
+  scope.coolifyMe = function(friend) {
+    friend.name = “B.B. King”;
+    friend.hobby = “guitar”;
+  }
+}
+</code></pre>
+
+<p>  }
+});
+```</p>
+
+<p>Notice how we have a scope property now, and we define a key <code>friend</code>, which matches
+our attribute name that we added. The equals sign says “we want to two-way data
+bind this, and furthermore, do it as the same name: <code>friend</code>&ldquo;.</p>
+
+<p>Now, we can easily use this directive wherever—-all we need to do is change the
+attribute <code>friend=</code> to be whatever <code>ng-repeat</code> sets the value to!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Decorator pattern in JavaScript]]></title>
@@ -774,111 +963,6 @@ matter, as most translate to any programming language you choose. The point
 is to get your brain and your fingers adept at solving problems in code.</p>
 
 <p>What other lists of coding exercises have people discovered useful?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Promises in Angular.js]]></title>
-    <link href="http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js/"/>
-    <updated>2013-10-17T21:43:00-06:00</updated>
-    <id>http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js</id>
-    <content type="html"><![CDATA[<p>One of the hardest things for me to grok in JavaScript was promise-based style
-handling of the async nature of the language.
-I understood the async JavaScript just fine, and could wield callbacks
-like a banshee. However, promise-based structures provided a more elegant solution
-than callbacks&mdash;particularly when you were several calls deep. I will describe
-what I learned in the context of Angular, as it has a very simple yet elegant
-implementation of promises in its $q library.</p>
-
-<!-- more -->
-
-
-<p>First, imagine we have a function for a person. We will define two callbacks for
-this person: one for what success for them would be, and one for what their
-life&rsquo;s error condition would look like. We&rsquo;ll assume they are either happy or
-sad:</p>
-
-<p>```javascript
-var Person = function(name) {
-  this.success = function(reason) {</p>
-
-<pre><code>console.log(name + " is happy because " + reason);
-</code></pre>
-
-<p>  };</p>
-
-<p>  this.error = function(reason) {</p>
-
-<pre><code>console.log(name + " is sad because " + reason);
-</code></pre>
-
-<p>  };
-};
-```</p>
-
-<p>Next, we&rsquo;ll create this person:</p>
-
-<p><code>javascript
-var fred = new Person("Fred");
-</code></p>
-
-<p>We now need to define a task that needs to be accomplished in the future. We&rsquo;ll
-say it&rsquo;s a delivery of shiny new roller stakes from Amazon. Receiving them
-would be a success, and thus make Fred happy. Having them not delivered would
-be an error, and thus make Fred really sad.</p>
-
-<p>To do so, we&rsquo;ll create a task using $q&rsquo;s defer() method. This creates a
-deferred object, which holds the future task execution:</p>
-
-<p><code>javascript
-var task = $q.defer();
-</code></p>
-
-<p>This future task object has a promise object as a property; it is the placeholder
-for the results of the task&rsquo;s execution:</p>
-
-<p><code>javascript
-var results = task.promise;
-</code>
-We then set up the order of events, using &ldquo;promise, then&rdquo; syntax. This takes the
-place of passing callback(s) to the task method, and having the task method have to call
-them when complete.</p>
-
-<p><code>javascript
-results.then(fred.success, fred.error);
-</code>
-We can then have the task programmatically succeed or fail depending on whatever
-arbitrary logic we choose. $q&rsquo;s parlance is &ldquo;resolve&rdquo; or &ldquo;reject&rdquo;.</p>
-
-<p>If we succeed:</p>
-
-<p><code>javascript
-task.resolve("Roller skates from Amazon have arrived");
-</code>
-&hellip;the appropriate &ldquo;happy&rdquo; success method is called. Conversely, if we fail:</p>
-
-<p><code>javascript
-task.reject("Roller skates from Amazon are backordered");
-</code>
-&hellip;the appropriate &ldquo;sad&rdquo; error method is called.</p>
-
-<p>This is a pretty simple example, one that maybe unneccessarily takes on a lot of
-overhead for promises. But you can see how if we now introduce other objects&mdash;say
-an Amazon online store that has takeOrder, deliverOrder, and problemWithOrder
-methods&mdash;using promises could avoid multiple levels of callback heck. The takeOrder
-method could take an argument of ordered items, and set up a current order that
-had an items property as well as a task deferred object. Instead of returning the
-order, it simply returns the promise property of the task deferred object, which
-is used to call then() on:</p>
-
-<p><code>javascript
-var amazon = new MailOrder($q);
-var itemDelivered = amazon.takeOrder('Nexus 7');
-itemDelivered.then(fred.success, fred.error);
-amazon.problemWithOrder('Nexus 7 is no longer in stock!');
-</code>
-<em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor.
-See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">&ldquo;Promises in AngularJS, Explained as a Cartoon&rdquo;</a>.</p>
 ]]></content>
   </entry>
   
