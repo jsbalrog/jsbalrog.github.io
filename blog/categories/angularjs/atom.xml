@@ -4,7 +4,7 @@
   <title><![CDATA[Category: angularjs | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-03T16:31:01-06:00</updated>
+  <updated>2014-10-04T11:46:52-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -29,16 +29,26 @@ the power of isolate scope-based directives.</p>
 <p>Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:</p>
 
-<p>``` html</p>
-
-<div ng-controller=“MyCtrl as main”>
-  <ul ng-repeat=“friend in main.friends”>
-    <li>My name is , I play the .</li>
-  </ul>
-</div>
-
-
-<p>```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
+</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
+</span><span class='line'>    &lt;li>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>  &lt;/ul>
+</span><span class='line'>&lt;/div>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>&hellip;And here&rsquo;s the controller:</p>
 
@@ -62,11 +72,12 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 <p>So, I do something like this:</p>
 
-<p><code>html
-...
-&lt;li ng-click=“main.coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;
-...
-</code></p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;
+</span><span class='line'>&lt;li ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>&hellip;and the corresponding method in the controller:</p>
 
@@ -91,16 +102,26 @@ Sounds like a job for a reusable custom directive!</p>
 <p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:</p>
 
-<p>``` html</p>
-
-<div ng-controller=“MyCtrl as main”>
-  <ul ng-repeat=“friend in main.friends”>
-    <coolness-dir></coolness-dir>
-  </ul>
-</div>
-
-
-<p>```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
+</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
+</span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
+</span><span class='line'>  &lt;/ul>
+</span><span class='line'>&lt;/div>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
 our directive:</p>
@@ -134,16 +155,22 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 
 <p>But wait. There is a list where I want to use this directive, but it looks like this:</p>
 
-<p>``` html
-&hellip;</p>
-
-<ul ng-repeat=“foo in main.friends”>
-...
-</ul>
-
-
-<p>&hellip;
-```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
+</span><span class='line'>...
+</span><span class='line'>&lt;/ul>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>What’s this <code>foo</code> business? My directive code template refers to <code>friend.name</code> and
 <code>friend.hobby</code>—-this will break!</p>
@@ -157,16 +184,22 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 
 <p>First, here’s what our html looks like:</p>
 
-<p>``` html
-&hellip;</p>
-
-<ul ng-repeat=“foo in main.friends”>
-     <coolness-dir friend=“foo”></coolness-dir>
-</ul>
-
-
-<p>&hellip;
-```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
+</span><span class='line'>     &lt;coolness-dir friend=“foo”>&lt;/coolness-dir>
+</span><span class='line'>&lt;/ul>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Notice that we added an attribute to our directive: <code>friend</code>. This is the hole
 through to the directive. Speaking of which, here’s the code now:</p>
