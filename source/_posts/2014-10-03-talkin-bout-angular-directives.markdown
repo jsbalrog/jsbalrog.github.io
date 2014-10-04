@@ -14,13 +14,13 @@ the power of isolate scope-based directives.
 Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:
 
-``` html
+{% codeblock %} {% raw %}
 <div ng-controller=“MyCtrl as main”>
   <ul ng-repeat=“friend in main.friends”>
     <li>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
   </ul>
 </div>
-```
+{% endraw %} {% endcodeblock %}
 
 ...And here's the controller:
 
@@ -41,11 +41,11 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 So, I do something like this:
 
-``` html
+{% codeblock %} {% raw %}
 ...
 <li ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
 ...
-```
+{% endraw %} {% endcodeblock %}
 
 ...and the corresponding method in the controller:
 
@@ -66,13 +66,13 @@ Sounds like a job for a reusable custom directive!
 So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:
 
-``` html
+{% codeblock %} {% raw %}
 <div ng-controller=“MyCtrl as main”>
   <ul ng-repeat=“friend in main.friends”>
     <coolness-dir></coolness-dir>
   </ul>
 </div>
-```
+{% endraw %} {% endcodeblock %}
 
 Nice, neat, compact html, which is what angular directives are awesome for. Here’s
 our directive:
@@ -103,13 +103,13 @@ Okay, everything’s good. Works like a champ.
 ### A problem arises
 But wait. There is a list where I want to use this directive, but it looks like this:
 
-``` html
+{% codeblock %} {% raw %}
 ...
 <ul ng-repeat=“foo in main.friends”>
 ...
 </ul>
 ...
-```
+{% endraw %} {% endcodeblock %}
 
 What’s this `foo` business? My directive code template refers to `friend.name` and
 `friend.hobby`—-this will break!
@@ -122,13 +122,13 @@ Isolate scope comes to the rescue here—it allows us to seal off the directive 
 
 First, here’s what our html looks like:
 
-``` html
+{% codeblock %} {% raw %}
 ...
 <ul ng-repeat=“foo in main.friends”>
      <coolness-dir friend=“foo”></coolness-dir>
 </ul>
 ...
-```
+{% endraw %} {% endcodeblock %}
 
 Notice that we added an attribute to our directive: `friend`. This is the hole
 through to the directive. Speaking of which, here’s the code now:
