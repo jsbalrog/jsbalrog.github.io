@@ -16,8 +16,8 @@ their name and their hobby. The html looks like this:
 
 {% codeblock %} {% raw %}
 <div ng-controller=“MyCtrl as main”>
-  <ul ng-repeat=“friend in main.friends”>
-    <li>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
+  <ul>
+    <li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
   </ul>
 </div>
 {% endraw %} {% endcodeblock %}
@@ -43,7 +43,7 @@ So, I do something like this:
 
 {% codeblock %} {% raw %}
 ...
-<li ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
+<li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
 ...
 {% endraw %} {% endcodeblock %}
 
@@ -68,7 +68,7 @@ Here’s what the html looks like:
 
 {% codeblock %} {% raw %}
 <div ng-controller=“MyCtrl as main”>
-  <ul ng-repeat=“friend in main.friends”>
+  <ul>
     <coolness-dir></coolness-dir>
   </ul>
 </div>
@@ -82,7 +82,7 @@ our directive:
   return {
     restrict: ‘E’,
     replace: true,
-    template: ‘<li ng-click=“coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>’,
+    template: ‘<li ng-repeat=“friend in main.friends” ng-click=“coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>’,
     link: function(scope, elem, attrs) {
       scope.coolifyMe = function(friend) {
         friend.name = “B.B. King”;
@@ -101,18 +101,18 @@ method in the directive’s `link` function (I have a `link` function because we
 Okay, everything’s good. Works like a champ.
 
 ### A problem arises
-But wait. There is a list where I want to use this directive, but it looks like this:
+But wait. There is a list where I want to use this directive, but it's controller defines
+the list as follows:
 
-{% codeblock %} {% raw %}
-...
-<ul ng-repeat=“foo in main.friends”>
-...
-</ul>
-...
-{% endraw %} {% endcodeblock %}
+``` js
+this.enemies = [
+    { 'name': 'Ted', 'hobby': 'kazoo' },
+    { 'name': 'Charlie', 'hobby': 'harp' }
+  ];
+```
 
-What’s this `foo` business? My directive code template refers to `friend.name` and
-`friend.hobby`—-this will break!
+What’s this `enemies` business? My directive code template refers to `friends` in
+its template--this will break!
 
 ### Isolate scope to the rescue!
 Isolate scope comes to the rescue here—it allows us to seal off the directive from
@@ -124,13 +124,13 @@ First, here’s what our html looks like:
 
 {% codeblock %} {% raw %}
 ...
-<ul ng-repeat=“foo in main.friends”>
-     <coolness-dir friend=“foo”></coolness-dir>
+<ul>
+     <coolness-dir friends=“main.enemies”></coolness-dir>
 </ul>
 ...
 {% endraw %} {% endcodeblock %}
 
-Notice that we added an attribute to our directive: `friend`. This is the hole
+Notice that we added an attribute to our directive: `friends`. This is the hole
 through to the directive. Speaking of which, here’s the code now:
 
 ``` js
@@ -139,9 +139,9 @@ through to the directive. Speaking of which, here’s the code now:
     restrict: ‘E’,
     replace: true,
     scope: {
-      friend: ‘=‘
+      friends: ‘=‘
     },
-    template: ‘<li ng-click=“coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>’,
+    template: ‘<li ng-repeat="friend in friends" ng-click=“coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>’,
     link: function(scope, elem, attrs) {
       scope.coolifyMe = function(friend) {
         friend.name = “B.B. King”;
@@ -152,9 +152,10 @@ through to the directive. Speaking of which, here’s the code now:
 });
 ```
 
-Notice how we have a scope property now, and we define a key `friend`, which matches
+Notice how we have a scope property now, and we define a key `friends`, which matches
 our attribute name that we added. The equals sign says “we want to two-way data
-bind this, and furthermore, do it as the same name: `friend`".
+bind this, and furthermore, do it as the same name: `friends`".
 
 Now, we can easily use this directive wherever—-all we need to do is change the
-attribute `friend=` to be whatever `ng-repeat` sets the value to!
+attribute `friends=` to be whatever the controller sets the value of the list to.
+This insulates our usage of `friends` in our directive from breaking.
