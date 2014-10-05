@@ -6,6 +6,12 @@ comments: true
 sharing: true
 footer: true
 ---
-#About Me
-JS Balrog is a site written and maintained by Ted Jenkins, web developer, literati,
-and father.
+# About Me
+JS Balrog is a site about web development, programming, and other random things,
+written and maintained by Ted Jenkins, a web developer, literati,
+husband, and father.
+
+## Contact
+Twitter [@jsbalrog](https://www.twitter.com/jsbalrog)
+
+GitHub [jsbalrog](https://github.com/jsbalrog)
