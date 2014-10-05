@@ -1,107 +1,126 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>JS Balrog</title>
-  <meta name="author" content="Ted Jenkins">
+	<meta charset="utf-8">
+	<title>JS Balrog</title>
+    <meta name="author" content="Ted Jenkins">
+    
+	<meta name="description" content="Published on: Oct 3rd, 2014 Tags: angularjs, programming In this post, let’s take a look at the power of directives, and in particular,
+the power of &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <meta name="description" content="In this post, let’s take a look at the power of directives, and in particular,
-the power of isolate scope-based directives. ">
-  
+	<link href="/atom.xml" rel="alternate" title="JS Balrog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-  
-  <link rel="canonical" href="http://jsbalrog.github.io">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="JS Balrog" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
 
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-50193650-1']);
-    _gaq.push(['_setDomainName','github.io']);
-    _gaq.push(['_trackPageview']);
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+    
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-50193650-1']);
+		_gaq.push(['_trackPageview']);
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-50193650-1', 'jsbalrog.github.io');
-  ga('send', 'pageview');
-
-</script>
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">JS Balrog</a></h1>
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        Ted Jenkins
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
   
-    <h2>Hey, he only lost once to an old guy with a beard and a hat.</h2>
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/jsbalrog" class="github" title="Github"></a>
+  </li>
   
-</hgroup>
+  
+  <!-- Google Plus -->
+  <li>
+  <a href="http://plus.google.com/108288524775655786606?rel=author" class="google" title="Google+"></a>
+  </li>
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/jsbalrog" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:jsbalrog.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/03/talkin-bout-angular-directives/">Talkin&#8217; &#8216;Bout Angular Directives</a></h1>
-    
-    
-      <p class="meta">
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
         
 
 
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/10/03/talkin-bout-angular-directives/">
+		
+			Talkin&#8217; &#8216;Bout Angular Directives</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
 
 
 
@@ -111,98 +130,84 @@ the power of isolate scope-based directives. ">
   
 
 
-<time datetime="2014-10-03T15:37:00-06:00" pubdate data-updated="true">Oct 3<span>rd</span>, 2014</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2014-10-03T15:37:00-06:00" pubdate data-updated="true">Oct 3<span>rd</span>, 2014</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
-
-  <div class="entry-content"><p>In this post, let’s take a look at the power of directives, and in particular,
-the power of isolate scope-based directives.</p>
 
 </div>
+    </div>
+		<p>In this post, let’s take a look at the power of directives, and in particular,
+the power of isolate scope-based directives.</p>
+
+
+		
+		<a href="/blog/2014/10/03/talkin-bout-angular-directives/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/08/15/decorator-pattern-in-javascript/">
+		
+			Decorator Pattern in JavaScript</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
+
+
+
+
+
+
+
+
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/10/03/talkin-bout-angular-directives/">Read on &rarr;</a>
-    </footer>
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/15/decorator-pattern-in-javascript/">Decorator Pattern in JavaScript</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2014-08-15T12:29:00-06:00" pubdate data-updated="true">Aug 15<span>th</span>, 2014</time></div>
+      <div class="tags">Tags: 
 
 
+	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-
-
-
-
-  
-
-
-<time datetime="2014-08-15T12:29:00-06:00" pubdate data-updated="true">Aug 15<span>th</span>, 2014</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
-
-
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
+</div>
+    </div>
+		<p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
 For this post, I want to talk about a programming pattern that I use quite often:
 the Decorator pattern.</p>
 
+
+		
+		<a href="/blog/2014/08/15/decorator-pattern-in-javascript/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/08/15/decorator-pattern-in-javascript/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/07/16/oo-javascript-creating-objects/">
+		
+			OO Javascript: Creating Objects</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -214,48 +219,41 @@ the Decorator pattern.</p>
   
 
 
-<time datetime="2014-07-16T07:35:00-06:00" pubdate data-updated="true">Jul 16<span>th</span>, 2014</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2014-07-16T07:35:00-06:00" pubdate data-updated="true">Jul 16<span>th</span>, 2014</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-  <div class="entry-content"><p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
+</div>
+    </div>
+		<p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
 inheritance, and polymorphism. Javascript of course has no concept of such things as classes; therefore, we use common javascript principles in order to
 take advantage of such things–even for how we define a javascript “object”.
 This post in particular will focus on javascript object creation.</p>
 
+
+		
+		<a href="/blog/2014/07/16/oo-javascript-creating-objects/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/16/oo-javascript-creating-objects/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/05/06/stick-it-to-drm/">
+		
+			Stick It to DRM</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -267,49 +265,42 @@ This post in particular will focus on javascript object creation.</p>
   
 
 
-<time datetime="2014-05-06T08:10:00-06:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/announcements/'>announcements</a>
-  
-</span>
+<time datetime="2014-05-06T08:10:00-06:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/announcements/'>announcements</a>
 
 
-  <div class="entry-content"><p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
+</div>
+    </div>
+		<p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
 material in digital format&mdash;has long been a sticking point for me. International Day Against
 DRM is Tuesday, May 6th. Several publishing houses are marking this day with great discounts.
 One such publisher that I really like, Packt (pronounced &ldquo;packed&rdquo;) Publishing, is offering
 anything in their catalog for $10 during May 6th. Pretty sweet, huh?</p>
 
+
+		
+		<a href="/blog/2014/05/06/stick-it-to-drm/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/06/stick-it-to-drm/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Facebook Auth With Angularjs and Tokens</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">
+		
+			Facebook Auth With Angularjs and Tokens</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -321,23 +312,16 @@ anything in their catalog for $10 during May 6th. Pretty sweet, huh?</p>
   
 
 
-<time datetime="2014-04-20T19:28:00-06:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2014-04-20T19:28:00-06:00" pubdate data-updated="true">Apr 20<span>th</span>, 2014</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-  <div class="entry-content"><p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
+</div>
+    </div>
+		<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
 <p>I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
@@ -367,27 +351,27 @@ auth request client-side, rather than server-side. Using the <a href="https://gi
 angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
 Here&rsquo;s how to do it.</p>
 
+
+		
+		<a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/19/coding-equals-equals-practice/">Coding == Practice</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/10/19/coding-equals-equals-practice/">
+		
+			Coding == Practice</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -399,23 +383,16 @@ Here&rsquo;s how to do it.</p>
   
 
 
-<time datetime="2013-10-19T12:41:00-06:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2013-10-19T12:41:00-06:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-  <div class="entry-content"><p>In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
+</div>
+    </div>
+		<p>In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
 I used to tell my guitar students that it takes literally miles
 of practice&mdash;DAILY practice&mdash;up and down the guitar fretboard to feel comfortable
 improv-ing a solo on the guitar with a band. I could always tell the
@@ -423,27 +400,27 @@ students that practiced a little every day versus the ones who thought
 they could practice for three hours once a week. The ones who practiced
 just minutes every day always improved more rapidly.</p>
 
+
+		
+		<a href="/blog/2013/10/19/coding-equals-equals-practice/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/19/coding-equals-equals-practice/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/17/promises-in-angular-dot-js/">Promises in Angular.js</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/10/17/promises-in-angular-dot-js/">
+		
+			Promises in Angular.js</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -455,23 +432,16 @@ just minutes every day always improved more rapidly.</p>
   
 
 
-<time datetime="2013-10-17T21:43:00-06:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2013-10-17T21:43:00-06:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-  <div class="entry-content"><p>One of the hardest things for me to grok in JavaScript was promise-based style
+</div>
+    </div>
+		<p>One of the hardest things for me to grok in JavaScript was promise-based style
 handling of the async nature of the language.
 I understood the async JavaScript just fine, and could wield callbacks
 like a banshee. However, promise-based structures provided a more elegant solution
@@ -479,27 +449,27 @@ than callbacks&mdash;particularly when you were several calls deep. I will descr
 what I learned in the context of Angular, as it has a very simple yet elegant
 implementation of promises in its $q library.</p>
 
+
+		
+		<a href="/blog/2013/10/17/promises-in-angular-dot-js/" class="more-link">Read on &rarr;</a>
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/17/promises-in-angular-dot-js/">Read on &rarr;</a>
-    </footer>
-  
+</article>
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/17/understanding-closures-in-javascript/">Understanding Closures in Javascript</a></h1>
-    
-    
-      <p class="meta">
-        
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/10/17/understanding-closures-in-javascript/">
+		
+			Understanding Closures in Javascript</a>
+	</h2>
+    <div class="entry-content">
+    <div class="meta">
+      <div class="date">Published on: 
 
 
 
@@ -511,125 +481,53 @@ implementation of promises in its $q library.</p>
   
 
 
-<time datetime="2013-10-17T09:06:00-06:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time> - 
-        Posted in 
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-  
-</span>
+<time datetime="2013-10-17T09:06:00-06:00" pubdate data-updated="true">Oct 17<span>th</span>, 2013</time></div>
+      <div class="tags">Tags: 
 
 
-        
-      </p>
-    
-  </header>
+	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
 
 
-  <div class="entry-content"><p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
+</div>
+    </div>
+		<p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
 post on the topic. I think it covers the subject well: check out Angus Croll&rsquo;s &ldquo;<a href="http://javascriptweblog.wordpress.com/2010/10/25/understanding-javascript-closures/">Understanding JavaScript Closures</a>&rdquo;.</p>
+
+		
+		
+	</div>
+
+<div class="meta">
+	
 </div>
-  
-  
+</article>
 
-
-    </article>
-  
-  <div class="pagination">
+<nav id="pagenavi">
     
-    <a href="/blog/archives">Blog Archives</a>
     
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>About Me</h1>
-  <p>I&#8217;m a full-stack web dev based in Utah. I love to develop, I make mistakes, and I document what I learn. Hope it helps someone
-  else!</p>
-</section>
-<section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2014/10/03/talkin-bout-angular-directives/">Talkin&#8217; &#8216;Bout Angular Directives</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/08/15/decorator-pattern-in-javascript/">Decorator Pattern in JavaScript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Facebook Auth With Angularjs and Tokens</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>GitHub Repos</h1>
-  <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  
-  <a href="https://github.com/jsbalrog">@jsbalrog</a> on GitHub
-  
-  <script type="text/javascript">
-    $(document).ready(function(){
-        if (!window.jXHR){
-            var jxhr = document.createElement('script');
-            jxhr.type = 'text/javascript';
-            jxhr.src = '/javascripts/libs/jXHR.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(jxhr, s);
-        }
-
-        github.showRepos({
-            user: 'jsbalrog',
-            count: 0,
-            skip_forks: true,
-            target: '#gh_repos'
-        });
-    });
-  </script>
-  <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-
-<section class="googleplus googleplus-hidden">
-  <h1>
-    <a href="https://plus.google.com/108288524775655786606?rel=author">
-      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-      Google+
-    </a>
-  </h1>
-</section>
-
-
-
-  
-</aside>
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav>
 
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Ted Jenkins -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2014
 
-</footer>
-  
+    Ted Jenkins
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
 
 <script type="text/javascript">
       var disqus_shortname = 'jsbalrog';
@@ -639,47 +537,23 @@ post on the topic. I think it covers the subject well: check out Angus Croll&rsq
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
 
 
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id; js.async = true;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 
 
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
 </body>
 </html>
