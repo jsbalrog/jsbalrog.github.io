@@ -3,11 +3,13 @@
 <html lang="en-GB">
 <head>
 	<meta charset="utf-8">
-	<title>  | JS Balrog</title>
+	<title>about  | JS Balrog</title>
 
 	<meta name="author" content="Ted Jenkins">
 
-<meta name="description" content="Search Results $('#search_results').tapir({ 'token': '', 'complete' : function() { document.getElementById('search_loading').style.display="none &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="About Me JS Balrog is a site written and maintained by Ted Jenkins, web developer, literati,
+and father.
+"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -47,21 +49,20 @@
 
 </header>
 
-	<div id="content" class="inner"><h1 class="entry-title"><center>Search Results</center></h1>
-<div id="search_loading" style="margin: 40px 0">
-    <center><img src="/images/loading.gif"></center>
-</div>
+	<div id="content" class="inner"><article class="page">
+    <div class="entry-content"><h1>About Me</h1>
 
-<script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
-<div id="search_results" style="display:none">
-<br>
+<p>JS Balrog is a site written and maintained by Ted Jenkins, web developer, literati,
+and father.</p>
 </div>
-<script>
-         $('#search_results').tapir({
-             'token': '',
-             'complete' : function() { document.getElementById('search_loading').style.display="none"; }
-         });
-</script>
+</article>
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
 
 </div>
 	<footer id="footer" class="inner"><br>
@@ -81,7 +82,10 @@
       var disqus_shortname = 'jsbalrog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jsbalrog.github.io/about/index.html';
+        var disqus_url = 'http://jsbalrog.github.io/about/index.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
