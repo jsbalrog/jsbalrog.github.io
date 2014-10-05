@@ -4,7 +4,7 @@
   <title><![CDATA[Category: angularjs | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-04T11:46:52-06:00</updated>
+  <updated>2014-10-04T19:37:10-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -42,8 +42,8 @@ their name and their hobby. The html looks like this:</p>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
-</span><span class='line'>    &lt;li>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>  &lt;ul>
+</span><span class='line'>    &lt;li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
 </span><span class='line'>  &lt;/ul>
 </span><span class='line'>&lt;/div>
 </span><span class='line'>
@@ -76,7 +76,7 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;
-</span><span class='line'>&lt;li ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
 </span><span class='line'>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>&hellip;and the corresponding method in the controller:</p>
@@ -115,7 +115,7 @@ Here’s what the html looks like:</p>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
+</span><span class='line'>  &lt;ul>
 </span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
 </span><span class='line'>  &lt;/ul>
 </span><span class='line'>&lt;/div>
@@ -132,7 +132,7 @@ our directive:</p>
 
 <pre><code>restrict: ‘E’,
 replace: true,
-template: ‘&lt;li ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
+template: ‘&lt;li ng-repeat=“friend in main.friends” ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
 link: function(scope, elem, attrs) {
   scope.coolifyMe = function(friend) {
     friend.name = “B.B. King”;
@@ -153,27 +153,21 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 
 <h3>A problem arises</h3>
 
-<p>But wait. There is a list where I want to use this directive, but it looks like this:</p>
+<p>But wait. There is a list where I want to use this directive, but it&rsquo;s controller defines
+the list as follows:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
-</span><span class='line'>...
-</span><span class='line'>&lt;/ul>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>&lt;p>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>``` js
+this.enemies = [</p>
 
-<p>What’s this <code>foo</code> business? My directive code template refers to <code>friend.name</code> and
-<code>friend.hobby</code>—-this will break!</p>
+<pre><code>{ 'name': 'Ted', 'hobby': 'kazoo' },
+{ 'name': 'Charlie', 'hobby': 'harp' }
+</code></pre>
+
+<p>  ];
+```</p>
+
+<p>What’s this <code>enemies</code> business? My directive code template refers to <code>friends</code> in
+its template&mdash;this will break!</p>
 
 <h3>Isolate scope to the rescue!</h3>
 
@@ -194,14 +188,14 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
-</span><span class='line'>     &lt;coolness-dir friend=“foo”>&lt;/coolness-dir>
+</span><span class='line'>&lt;ul>
+</span><span class='line'>     &lt;coolness-dir friends=“main.enemies”>&lt;/coolness-dir>
 </span><span class='line'>&lt;/ul>
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'>&lt;p>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Notice that we added an attribute to our directive: <code>friend</code>. This is the hole
+<p>Notice that we added an attribute to our directive: <code>friends</code>. This is the hole
 through to the directive. Speaking of which, here’s the code now:</p>
 
 <p>``` js
@@ -211,9 +205,9 @@ through to the directive. Speaking of which, here’s the code now:</p>
 <pre><code>restrict: ‘E’,
 replace: true,
 scope: {
-  friend: ‘=‘
+  friends: ‘=‘
 },
-template: ‘&lt;li ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
+template: ‘&lt;li ng-repeat="friend in friends" ng-click=“coolifyMe(friend)”&gt;My name is , I play the .&lt;/li&gt;’,
 link: function(scope, elem, attrs) {
   scope.coolifyMe = function(friend) {
     friend.name = “B.B. King”;
@@ -226,12 +220,13 @@ link: function(scope, elem, attrs) {
 });
 ```</p>
 
-<p>Notice how we have a scope property now, and we define a key <code>friend</code>, which matches
+<p>Notice how we have a scope property now, and we define a key <code>friends</code>, which matches
 our attribute name that we added. The equals sign says “we want to two-way data
-bind this, and furthermore, do it as the same name: <code>friend</code>&ldquo;.</p>
+bind this, and furthermore, do it as the same name: <code>friends</code>&ldquo;.</p>
 
 <p>Now, we can easily use this directive wherever—-all we need to do is change the
-attribute <code>friend=</code> to be whatever <code>ng-repeat</code> sets the value to!</p>
+attribute <code>friends=</code> to be whatever the controller sets the value of the list to.
+This insulates our usage of <code>friends</code> in our directive from breaking.</p>
 ]]></content>
   </entry>
   

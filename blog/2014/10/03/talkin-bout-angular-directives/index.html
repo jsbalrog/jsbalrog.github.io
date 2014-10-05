@@ -141,8 +141,8 @@ their name and their hobby. The html looks like this:</p>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
-</span><span class='line'>    &lt;li>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>  &lt;ul>
+</span><span class='line'>    &lt;li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
 </span><span class='line'>  &lt;/ul>
 </span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
 
@@ -177,7 +177,7 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;li ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
+</span><span class='line'>&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
 </span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
 
 
@@ -211,7 +211,7 @@ Here’s what the html looks like:</p>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul ng-repeat=“friend in main.friends”>
+</span><span class='line'>  &lt;ul>
 </span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
 </span><span class='line'>  &lt;/ul>
 </span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
@@ -238,7 +238,7 @@ our directive:</p>
 </span><span class='line'>  <span class="k">return</span> <span class="p">{</span>
 </span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="err">‘</span><span class="nx">E</span><span class="err">’</span><span class="p">,</span>
 </span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="err">“</span><span class="nx">friend</span> <span class="k">in</span> <span class="nx">main</span><span class="p">.</span><span class="nx">friends</span><span class="err">”</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
 </span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>      <span class="nx">scope</span><span class="p">.</span><span class="nx">coolifyMe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="err">“</span><span class="nx">B</span><span class="p">.</span><span class="nx">B</span><span class="p">.</span> <span class="nx">King</span><span class="err">”</span><span class="p">;</span>
@@ -259,22 +259,22 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 
 <h3>A problem arises</h3>
 
-<p>But wait. There is a list where I want to use this directive, but it looks like this:</p>
+<p>But wait. There is a list where I want to use this directive, but it&rsquo;s controller defines
+the list as follows:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
-</span><span class='line'>...
-</span><span class='line'>&lt;/ul>
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="k">this</span><span class="p">.</span><span class="nx">enemies</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>    <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;Ted&#39;</span><span class="p">,</span> <span class="s1">&#39;hobby&#39;</span><span class="o">:</span> <span class="s1">&#39;kazoo&#39;</span> <span class="p">},</span>
+</span><span class='line'>    <span class="p">{</span> <span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span> <span class="s1">&#39;hobby&#39;</span><span class="o">:</span> <span class="s1">&#39;harp&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>What’s this <code>foo</code> business? My directive code template refers to <code>friend.name</code> and
-<code>friend.hobby</code>—-this will break!</p>
+<p>What’s this <code>enemies</code> business? My directive code template refers to <code>friends</code> in
+its template&mdash;this will break!</p>
 
 <h3>Isolate scope to the rescue!</h3>
 
@@ -291,13 +291,13 @@ method in the directive’s <code>link</code> function (I have a <code>link</cod
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;ul ng-repeat=“foo in main.friends”>
-</span><span class='line'>     &lt;coolness-dir friend=“foo”>&lt;/coolness-dir>
+</span><span class='line'>&lt;ul>
+</span><span class='line'>     &lt;coolness-dir friends=“main.enemies”>&lt;/coolness-dir>
 </span><span class='line'>&lt;/ul>
 </span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice that we added an attribute to our directive: <code>friend</code>. This is the hole
+<p>Notice that we added an attribute to our directive: <code>friends</code>. This is the hole
 through to the directive. Speaking of which, here’s the code now:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -321,9 +321,9 @@ through to the directive. Speaking of which, here’s the code now:</p>
 </span><span class='line'>    <span class="nx">restrict</span><span class="o">:</span> <span class="err">‘</span><span class="nx">E</span><span class="err">’</span><span class="p">,</span>
 </span><span class='line'>    <span class="nx">replace</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
 </span><span class='line'>    <span class="nx">scope</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>      <span class="nx">friend</span><span class="o">:</span> <span class="err">‘</span><span class="o">=</span><span class="err">‘</span>
+</span><span class='line'>      <span class="nx">friends</span><span class="o">:</span> <span class="err">‘</span><span class="o">=</span><span class="err">‘</span>
 </span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
+</span><span class='line'>    <span class="nx">template</span><span class="o">:</span> <span class="err">‘</span><span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;friend in friends&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">click</span><span class="o">=</span><span class="err">“</span><span class="nx">coolifyMe</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span><span class="err">”</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">name</span> <span class="nx">is</span> <span class="p">,</span> <span class="nx">I</span> <span class="nx">play</span> <span class="nx">the</span> <span class="p">.</span><span class="o">&lt;</span><span class="err">/li&gt;’,</span>
 </span><span class='line'>    <span class="nx">link</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">elem</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>      <span class="nx">scope</span><span class="p">.</span><span class="nx">coolifyMe</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">friend</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>        <span class="nx">friend</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="err">“</span><span class="nx">B</span><span class="p">.</span><span class="nx">B</span><span class="p">.</span> <span class="nx">King</span><span class="err">”</span><span class="p">;</span>
@@ -335,12 +335,13 @@ through to the directive. Speaking of which, here’s the code now:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice how we have a scope property now, and we define a key <code>friend</code>, which matches
+<p>Notice how we have a scope property now, and we define a key <code>friends</code>, which matches
 our attribute name that we added. The equals sign says “we want to two-way data
-bind this, and furthermore, do it as the same name: <code>friend</code>&ldquo;.</p>
+bind this, and furthermore, do it as the same name: <code>friends</code>&ldquo;.</p>
 
 <p>Now, we can easily use this directive wherever—-all we need to do is change the
-attribute <code>friend=</code> to be whatever <code>ng-repeat</code> sets the value to!</p>
+attribute <code>friends=</code> to be whatever the controller sets the value of the list to.
+This insulates our usage of <code>friends</code> in our directive from breaking.</p>
 </div>
 
 
