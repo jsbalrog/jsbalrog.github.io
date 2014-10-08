@@ -53,7 +53,8 @@ The key here is the $get function--this returns an object that exposes the
 API for the app to use at runtime--in this case `getLang` is available to
 call within an arbitrary controller, etc.
 
-Moreover--and here's the important thing--`setLang` is callable in the app's config block.
+Moreover--and here's the important thing--the `setLang` method is callable 
+in the app's config block.
 
 ### Services
 
