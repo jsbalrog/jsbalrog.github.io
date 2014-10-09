@@ -4,7 +4,7 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://http://jsbalrog.github.io/"/>
-  <updated>2014-10-09T10:33:13-06:00</updated>
+  <updated>2014-10-09T10:39:01-06:00</updated>
   <id>http://http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -14,7 +14,7 @@
   
   <entry>
     
-    <title type="html"><![CDATA[Angularjs providers]]></title>
+    <title type="html"><![CDATA[Angularjs providers, factories, and services]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers/"/>
     
     <updated>2014-10-07T17:04:00-06:00</updated>
