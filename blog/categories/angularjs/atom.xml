@@ -4,7 +4,7 @@
   <title><![CDATA[Category: angularjs | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-08T18:19:07-06:00</updated>
+  <updated>2014-10-09T10:33:13-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -18,8 +18,8 @@
     <link href="http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers/"/>
     <updated>2014-10-07T17:04:00-06:00</updated>
     <id>http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers</id>
-    <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;
-angular offerings are multiple-choice. I want to spell out the differences between
+    <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;angular
+offerings are multiple-choice. I want to spell out the differences between
 angular-specific providers, services, and factories, and give some guidelines to
 when you would use each.</p>
 
@@ -46,7 +46,7 @@ the requirements, I just implement them.</p>
 <p>Here&rsquo;s what our provider looks like:</p>
 
 <p>``` js
-angular.module(&lsquo;myApp&rsquo;, []).provider(&lsquo;LanguageProvider&rsquo;, function() {</p>
+angular.module(&lsquo;myApp&rsquo;, []).provider(&lsquo;languageSetter&rsquo;, function() {</p>
 
 <pre><code>this.lang = 'english';
 </code></pre>
@@ -79,9 +79,156 @@ call within an arbitrary controller, etc.</p>
 <p>Moreover&mdash;and here&rsquo;s the important thing&mdash;the <code>setLang</code> method is callable
 in the app&rsquo;s config block.</p>
 
-<h3>Services</h3>
+<p>So, our app&rsquo;s config code can look like this:</p>
+
+<p>``` js
+angular.module(&lsquo;myApp&rsquo;).config(function(languageSetterProvider){</p>
+
+<pre><code>// Configuring a provider
+languageSetterProvider.setLang('japanese');
+</code></pre>
+
+<p>});
+```</p>
+
+<p>Notice that we have to append &ldquo;Provider&rdquo; onto the end of the name of our provider
+to be injected into our <code>config</code> function. According to the angular docs, &ldquo;This
+injection is done by a provider injector which is different from the regular instance
+injector, in that it instantiates and wires (injects) all provider instances only.&rdquo;</p>
+
+<p>During bootstrap of our application, Angular configures and instantiates all providers
+during the configuration phase before it moves on to create our services (in the run phase).
+Therefore, services aren&rsquo;t yet available. This means that any pre-run configuration
+(like our language configuration here) is a prime candidate to be thrown into a provider.</p>
+
+<p>Here&rsquo;s a controller, for sake of completion:</p>
+
+<p>``` js
+angular.module(&lsquo;myApp&rsquo;).controller(&lsquo;MyCtrl&rsquo;, function($scope, languageSetter) {</p>
+
+<p>  $scope.languages = [</p>
+
+<pre><code>languageSetter.getLang()
+</code></pre>
+
+<p>  ];
+});
+```</p>
+
+<p>&hellip;and then we can show off our language in an admittedly contrived manner:</p>
+
+<p>
+``` html
+&hellip;</p>
+
+<div ng-app="myApp">
+  <div ng-controller="MyCtrl">
+    {{ languages }}
+  </div>
+</div>
+
+
+<p>&hellip;
+```
+</p>
+
+<p>Even though our default language is &ldquo;english&rdquo;, during the app config we set the
+language to &ldquo;japanese&rdquo; using our provider.</p>
 
 <h3>Factories</h3>
+
+<p>An Angular factory constructs a new service&hellip;Wait&mdash;what? Yes, even though Angular has
+a separate Service recipe, the Angular factory recipe is for providing a singleton
+service. The nice thing about a factory is that it&rsquo;s very easy to use (think JavaScript
+revealing module pattern), it can have other services dependency injected, and can
+be lazily initialized.</p>
+
+<p>To continue our example, let&rsquo;s say that a marketing scheme is to be computed based on
+the language that is now stored in the browser&rsquo;s local storage for our app. Here&rsquo;s what
+the factory service looks like:</p>
+
+<p>``` js
+angular.module(&lsquo;myApp&rsquo;).factory(&lsquo;languageFactory&rsquo;, function() {</p>
+
+<pre><code>var schemify = function(lang) {
+    return lang + " marketing scheme--activate!";
+};
+
+var getScheme = function() {
+    var lang = window.localStorage.getItem('language');
+    return schemify(lang);
+};
+</code></pre>
+
+<p>  return {</p>
+
+<pre><code>getScheme: getScheme
+</code></pre>
+
+<p>  };
+});
+```</p>
+
+<p>&hellip;and then we can inject our factory (service) in our controller, and it will be
+lazily instantiated as a singleton:</p>
+
+<p><code>js
+angular.module('myApp').controller('MyCtrl', function($scope, languageFactory) {    
+  $scope.marketingScheme = languageFactory.getScheme();
+});
+</code></p>
+
+<p>Notice that we do not have access to our Factory in the config block of our app; it is
+not yet instantiated at that point.</p>
+
+<h3>Services</h3>
+
+<p>So, we know so far that a Provider is a service, and a Factory is a service. Not to
+mess with you, but a Service is a service as well. Here&rsquo;s what the Angular documentation
+says on the topic: &ldquo;Yes, we have called one of our service recipes &lsquo;Service&rsquo;. We regret
+this and know that we&rsquo;ll be somehow punished for our misdeed. It&rsquo;s like we named one of
+our offspring &lsquo;Child&rsquo;. Boy, that would mess with the teachers.&rdquo;</p>
+
+<p>So now you know. Hopefully we can avoid some confusion. The Service recipe provides a
+service just like Factory does, but the difference is that it invokes a constructor with
+the JavaScript <code>new</code> operator. The arguments passed to the constructor represent
+dependencies needed by instance of this type.</p>
+
+<p>To extend our example once more, let&rsquo;s see what our factory service would look like re-
+written as a service, ah, service:</p>
+
+<p>``` js
+angular.module(&lsquo;myApp&rsquo;, []).service(&lsquo;languageService&rsquo;, function() {
+  this.schemify = function(lang) {</p>
+
+<pre><code>return lang + " marketing scheme--activate!";
+</code></pre>
+
+<p>  };</p>
+
+<p>  this.getScheme = function() {</p>
+
+<pre><code>var lang = 'portuguese';
+    return this.schemify(lang);
+</code></pre>
+
+<p>  };
+});
+```</p>
+
+<p>Looks pretty familiar, doesn&rsquo;t it? We&rsquo;re not doing the public/private thing with methods
+here, just defining them on the <code>this</code> scope, like we would in a plain ol' JavaScript
+constructor. Our controller really doesn&rsquo;t change much.</p>
+
+<p>So, why the difference? Well, in practice, let me say that I use the Factory recipe far
+more than the Service recipe. I like being able to specify what methods are exposed as
+callable in the return block. Must be some remnant of my old Java public/private days.
+I really don&rsquo;t find much use for the Service recipe&mdash;can&rsquo;t see what it buys me. I have
+used the Provider recipe a couple of times when I do need to do some configuration in
+my app, before it hits the run phase. But again, Factory is far and away what I use most.</p>
+
+<p>Hope this helps clear up some of the confusion between these three services. Of course,
+there are also <code>Value</code> and <code>Constant</code>, but those are topics for another day&hellip;</p>
 ]]></content>
   </entry>
   
