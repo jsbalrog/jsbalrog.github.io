@@ -2,25 +2,23 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[JS Balrog]]></title>
-  <link href="http://http://jsbalrog.github.io/atom.xml" rel="self"/>
-  <link href="http://http://jsbalrog.github.io/"/>
-  <updated>2014-10-09T10:39:01-06:00</updated>
-  <id>http://http://jsbalrog.github.io/</id>
+  <link href="http://jsbalrog.github.io/atom.xml" rel="self"/>
+  <link href="http://jsbalrog.github.io/"/>
+  <updated>2014-10-09T10:44:37-06:00</updated>
+  <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
     
   </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
-    
     <title type="html"><![CDATA[Angularjs providers, factories, and services]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers/"/>
-    
     <updated>2014-10-07T17:04:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers</id>
-    
-      <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;angular
+    <id>http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers</id>
+    <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;angular
 offerings are multiple-choice. I want to spell out the differences between
 angular-specific providers, services, and factories, and give some guidelines to
 when you would use each.</p>
@@ -262,18 +260,14 @@ my app, before it hits the run phase. But again, Factory is far and away what I 
 <p>Hope this helps clear up some of the confusion between these three services. Of course,
 there are also <code>Value</code> and <code>Constant</code>, but those are topics for another day&hellip;</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Talkin' 'bout angular directives]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives/"/>
-    
     <updated>2014-10-03T15:37:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives</id>
-    
-      <content type="html"><![CDATA[<p>In this post, let’s take a look at the power of directives, and in particular,
+    <id>http://jsbalrog.github.io/blog/2014/10/03/talkin-bout-angular-directives</id>
+    <content type="html"><![CDATA[<p>In this post, let’s take a look at the power of directives, and in particular,
 the power of isolate scope-based directives.</p>
 
 <!-- more -->
@@ -494,18 +488,14 @@ bind this, and furthermore, do it as the same name: <code>friends</code>&ldquo;.
 attribute <code>friends=</code> to be whatever the controller sets the value of the list to.
 This insulates our usage of <code>friends</code> in our directive from breaking.</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Decorator pattern in JavaScript]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript/"/>
-    
     <updated>2014-08-15T12:29:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript</id>
-    
-      <content type="html"><![CDATA[<p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
+    <id>http://jsbalrog.github.io/blog/2014/08/15/decorator-pattern-in-javascript</id>
+    <content type="html"><![CDATA[<p>Last time I mentioned I was going to focus on some OO-related javascript concerns.
 For this post, I want to talk about a programming pattern that I use quite often:
 the Decorator pattern.</p>
 
@@ -662,18 +652,14 @@ of guitars and print out the price.</p>
 <p>This ought to whet your appetite for finding other uses for the decorator pattern
 in your code.</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[OO javascript: Creating objects]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/07/16/oo-javascript-creating-objects/"/>
-    
     <updated>2014-07-16T07:35:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/07/16/oo-javascript-creating-objects</id>
-    
-      <content type="html"><![CDATA[<p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
+    <id>http://jsbalrog.github.io/blog/2014/07/16/oo-javascript-creating-objects</id>
+    <content type="html"><![CDATA[<p>For a few posts we’ll talk a bit about programming javascript in such a way as to take advantage of OO principles of reuse, including encapsulation,
 inheritance, and polymorphism. Javascript of course has no concept of such things as classes; therefore, we use common javascript principles in order to
 take advantage of such things–even for how we define a javascript “object”.
 This post in particular will focus on javascript object creation.</p>
@@ -1064,18 +1050,14 @@ goes in the constructor function:</p>
 in different initialization parameters for each one, and yet all guitars
 share the same <code>getBrand</code> method. Great, huh?</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Stick it to DRM]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/05/06/stick-it-to-drm/"/>
-    
     <updated>2014-05-06T08:10:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/05/06/stick-it-to-drm</id>
-    
-      <content type="html"><![CDATA[<p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
+    <id>http://jsbalrog.github.io/blog/2014/05/06/stick-it-to-drm</id>
+    <content type="html"><![CDATA[<p>As an Open-Source advocate, DRM&mdash;<em>Digital Rights Management</em>, or a way to control access to
 material in digital format&mdash;has long been a sticking point for me. International Day Against
 DRM is Tuesday, May 6th. Several publishing houses are marking this day with great discounts.
 One such publisher that I really like, Packt (pronounced &ldquo;packed&rdquo;) Publishing, is offering
@@ -1104,18 +1086,14 @@ learning experience. That’s why we’ve been DRM-free from the beginning – w
 
 <p>Advocates of Day Against DRM are invited to spread the word and celebrate on May 6th by exploring the full range of DRM-free content at <a href="http://www.packtpub.com">packtpub.com</a>, where all eBooks and Videos will be $10 for 24 hours.</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Facebook auth with Angularjs and tokens]]></title>
     <link href="http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/"/>
-    
     <updated>2014-04-20T19:28:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
-    
-      <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
+    <id>http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
+    <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
 
 <p>I have an angular-fullstack based app (angular, node, express, passport),
 and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
@@ -1442,18 +1420,14 @@ we use the ENV constant:</p>
 <p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
 popup will show that is the right facebook app for your environment.</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Coding == Practice]]></title>
     <link href="http://jsbalrog.github.io/blog/2013/10/19/coding-equals-equals-practice/"/>
-    
     <updated>2013-10-19T12:41:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2013/10/19/coding-equals-equals-practice</id>
-    
-      <content type="html"><![CDATA[<p>In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
+    <id>http://jsbalrog.github.io/blog/2013/10/19/coding-equals-equals-practice</id>
+    <content type="html"><![CDATA[<p>In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
 I used to tell my guitar students that it takes literally miles
 of practice&mdash;DAILY practice&mdash;up and down the guitar fretboard to feel comfortable
 improv-ing a solo on the guitar with a band. I could always tell the
@@ -1508,18 +1482,14 @@ is to get your brain and your fingers adept at solving problems in code.</p>
 
 <p>What other lists of coding exercises have people discovered useful?</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Promises in Angular.js]]></title>
     <link href="http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js/"/>
-    
     <updated>2013-10-17T21:43:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js</id>
-    
-      <content type="html"><![CDATA[<p>One of the hardest things for me to grok in JavaScript was promise-based style
+    <id>http://jsbalrog.github.io/blog/2013/10/17/promises-in-angular-dot-js</id>
+    <content type="html"><![CDATA[<p>One of the hardest things for me to grok in JavaScript was promise-based style
 handling of the async nature of the language.
 I understood the async JavaScript just fine, and could wield callbacks
 like a banshee. However, promise-based structures provided a more elegant solution
@@ -1635,21 +1605,16 @@ is used to call then() on:</p>
 <p><em>edit:</em> After writing this post I came across one written at the same time, but better, and with a better metaphor.
 See <a href="http://andyshora.com/promises-angularjs-explained-as-cartoon.html">&ldquo;Promises in AngularJS, Explained as a Cartoon&rdquo;</a>.</p>
 ]]></content>
-      
   </entry>
   
   <entry>
-    
     <title type="html"><![CDATA[Understanding Closures In Javascript]]></title>
     <link href="http://jsbalrog.github.io/blog/2013/10/17/understanding-closures-in-javascript/"/>
-    
     <updated>2013-10-17T09:06:00-06:00</updated>
-    <id>http://http://jsbalrog.github.io/blog/2013/10/17/understanding-closures-in-javascript</id>
-    
-      <content type="html"><![CDATA[<p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
+    <id>http://jsbalrog.github.io/blog/2013/10/17/understanding-closures-in-javascript</id>
+    <content type="html"><![CDATA[<p>Closures are a common point of confusion for the JavaScript-uninitiated. Recently, a came across a couple-years-old
 post on the topic. I think it covers the subject well: check out Angus Croll&rsquo;s &ldquo;<a href="http://javascriptweblog.wordpress.com/2010/10/25/understanding-javascript-closures/">Understanding JavaScript Closures</a>&rdquo;.</p>
 ]]></content>
-      
   </entry>
   
 </feed>
