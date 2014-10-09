@@ -14,13 +14,15 @@ the power of isolate scope-based directives.
 Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:
 
-{% codeblock %} {% raw %}
+{% raw %}
+``` html
 <div ng-controller=“MyCtrl as main”>
   <ul>
     <li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
   </ul>
 </div>
-{% endraw %} {% endcodeblock %}
+```
+{% endraw %}
 
 ...And here's the controller:
 
@@ -41,11 +43,12 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 So, I do something like this:
 
-{% codeblock %} {% raw %}
-...
+{% raw %}
+``` html
 <li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
 ...
-{% endraw %} {% endcodeblock %}
+```
+{% endraw %}
 
 ...and the corresponding method in the controller:
 
@@ -66,13 +69,15 @@ Sounds like a job for a reusable custom directive!
 So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:
 
-{% codeblock %} {% raw %}
+{% raw %}
+``` html
 <div ng-controller=“MyCtrl as main”>
   <ul>
     <coolness-dir></coolness-dir>
   </ul>
 </div>
-{% endraw %} {% endcodeblock %}
+```
+{% endraw %}
 
 Nice, neat, compact html, which is what angular directives are awesome for. Here’s
 our directive:
@@ -122,13 +127,15 @@ Isolate scope comes to the rescue here—it allows us to seal off the directive 
 
 First, here’s what our html looks like:
 
-{% codeblock %} {% raw %}
+{% raw %}
+``` html
 ...
 <ul>
      <coolness-dir friends=“main.enemies”></coolness-dir>
 </ul>
 ...
-{% endraw %} {% endcodeblock %}
+```
+{% endraw %}
 
 Notice that we added an attribute to our directive: `friends`. This is the hole
 through to the directive. Speaking of which, here’s the code now:
