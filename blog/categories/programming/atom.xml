@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-05T11:56:20-06:00</updated>
+  <updated>2014-10-08T18:19:07-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Angularjs providers]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers/"/>
+    <updated>2014-10-07T17:04:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers</id>
+    <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;
+angular offerings are multiple-choice. I want to spell out the differences between
+angular-specific providers, services, and factories, and give some guidelines to
+when you would use each.</p>
+
+<!-- more -->
+
+
+<h3>Providers</h3>
+
+<p>At root, all three types of objects basically are providers. <code>angular.service</code> and
+<code>angular.factory</code> are syntactic sugar on top of <code>angular.provider</code>. That said, you
+should really prefer using a <code>service</code> or a <code>factory</code> (more on these below); use
+a <code>provider</code> only when you want to expose an API that you need to access in your
+angular module&rsquo;s <code>config</code> block, before the app starts. For example, you may
+have a reuseable service for which you want to modify the behavior between
+applications.</p>
+
+<p>Let&rsquo;s look at a concrete example. Let&rsquo;s say I have an app that has the requirement
+of specifying a different language depending on the app instance that is
+running&mdash;the app running on the servers in Japan, for example, must specify
+japanese as the app&rsquo;s language. The default language, if no config is
+specified, is english. I know, it&rsquo;s pretty contrived&mdash;but hey, I don&rsquo;t write
+the requirements, I just implement them.</p>
+
+<p>Here&rsquo;s what our provider looks like:</p>
+
+<p>``` js
+angular.module(&lsquo;myApp&rsquo;, []).provider(&lsquo;LanguageProvider&rsquo;, function() {</p>
+
+<pre><code>this.lang = 'english';
+</code></pre>
+
+<p>  this.$get = function() {</p>
+
+<pre><code>var lang = this.lang;
+return {
+  getLang: function() {
+    return lang;
+  }
+};
+</code></pre>
+
+<p>  };</p>
+
+<p>  this.setLang = function(lang) {</p>
+
+<pre><code>this.lang = lang;
+</code></pre>
+
+<p>  };
+})
+```</p>
+
+<p>The key here is the $get function&mdash;this returns an object that exposes the
+API for the app to use at runtime&mdash;in this case <code>getLang</code> is available to
+call within an arbitrary controller, etc.</p>
+
+<p>Moreover&mdash;and here&rsquo;s the important thing&mdash;the <code>setLang</code> method is callable
+in the app&rsquo;s config block.</p>
+
+<h3>Services</h3>
+
+<h3>Factories</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Talkin' 'bout angular directives]]></title>
@@ -29,26 +101,18 @@ the power of isolate scope-based directives.</p>
 <p>Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>
+``` html</p>
+
+<div ng-controller=“MyCtrl as main”>
+  <ul>
+    <li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.</li>
+  </ul>
+</div>
+
+
+<p>```
+</p>
 
 <p>&hellip;And here&rsquo;s the controller:</p>
 
@@ -72,12 +136,12 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 <p>So, I do something like this:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;
-</span><span class='line'>&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>
+<code>html
+&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”&gt;My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li&gt;
+...
+</code>
+</p>
 
 <p>&hellip;and the corresponding method in the controller:</p>
 
@@ -102,26 +166,18 @@ Sounds like a job for a reusable custom directive!</p>
 <p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>
+``` html</p>
+
+<div ng-controller=“MyCtrl as main”>
+  <ul>
+    <coolness-dir></coolness-dir>
+  </ul>
+</div>
+
+
+<p>```
+</p>
 
 <p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
 our directive:</p>
@@ -178,22 +234,18 @@ its template&mdash;this will break!</p>
 
 <p>First, here’s what our html looks like:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&hellip;&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;ul>
-</span><span class='line'>     &lt;coolness-dir friends=“main.enemies”>&lt;/coolness-dir>
-</span><span class='line'>&lt;/ul>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>&lt;p>&hellip;</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>
+``` html
+&hellip;</p>
+
+<ul>
+     <coolness-dir friends=“main.enemies”></coolness-dir>
+</ul>
+
+
+<p>&hellip;
+```
+</p>
 
 <p>Notice that we added an attribute to our directive: <code>friends</code>. This is the hole
 through to the directive. Speaking of which, here’s the code now:</p>
@@ -929,68 +981,6 @@ $facebookProvider.init({appId: ENV.appId});
 
 <p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
 popup will show that is the right facebook app for your environment.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Coding == Practice]]></title>
-    <link href="http://jsbalrog.github.io/blog/2013/10/19/coding-equals-equals-practice/"/>
-    <updated>2013-10-19T12:41:00-06:00</updated>
-    <id>http://jsbalrog.github.io/blog/2013/10/19/coding-equals-equals-practice</id>
-    <content type="html"><![CDATA[<p>In my other life I&rsquo;m a musician&mdash;a guitarist who plays in a band.
-I used to tell my guitar students that it takes literally miles
-of practice&mdash;DAILY practice&mdash;up and down the guitar fretboard to feel comfortable
-improv-ing a solo on the guitar with a band. I could always tell the
-students that practiced a little every day versus the ones who thought
-they could practice for three hours once a week. The ones who practiced
-just minutes every day always improved more rapidly.</p>
-
-<!-- more -->
-
-
-<p>One of the tools I used in my own daily practice routine was called
-<a href="http://www.learn-guitar-online.com/pentatonicpower.html">Pentatonic Power</a>
-by Bob Murnahan. The thinking is that musicianship is like language&mdash;
-you practice daily on committing to muscle memory the various pieces of
-the language&rsquo;s vocabulary, so that you have at your command the ability to combine
-those pieces together into interesting ways.</p>
-
-<p>The key here was that practice of these vocabulary pieces was to be a
-daily endeavor to be successful. Daily repetition committed the
-vocabulary building blocks to muscle memory. For daily repetition to
-be possible, it was essential that they were small units of work.</p>
-
-<p>I think the same is true in my software programming life. Just as it
-takes miles up and down the fretboard to have command of the instrument,
-I believe it takes miles back and forth across the keyboard to master
-the vocabulary pieces&mdash;the algorithms and idioms&mdash;of a computer language,
-or even of software engineering and problem-solving in general.</p>
-
-<p>Dave Thomas, an important figure in the Ruby Community and Pragmatic
-Programming wrote a <a href="http://codekata.pragprog.com/2007/01/code_kata_backg.html#more">blog post</a> several years back on this same idea, but couched within the notion of a &ldquo;kata&rdquo;, where
-the value of practice is emphasized when learning a creative process. He says,</p>
-
-<p>&ldquo;&hellip;see if you can carve out 45 to 60 minutes to play with a small
-piece of code. You don’t necessarily have to look at performance:
-perhaps you could play with the structure, or the memory use, or the
-interface. In the end it doesn’t matter. Experiment, measure, improve.</p>
-
-<p>Practice."</p>
-
-<p>I didn&rsquo;t have the benefit of the hours of practice that naturally are a
-result of being a computer science major in university while completing class assignments.
-I had to make up for it on my own with daily practice. Dave&rsquo;s suggestions ring true. If I can take 30-60 minutes
-every day to code a solution to a problem, I find that coding is more
-embedded in my &ldquo;muscle memory&rdquo;, and it makes me a better on-the-job
-programmer.</p>
-
-<p>To that end, I have always been looking for &ldquo;exercises&rdquo; to add to my
-daily routine. The aforementioned blog offers several suggestions as katas,
-and there are links to the <a href="http://rubyquiz.com/">Ruby Quiz</a> as well. The language typically doesn&rsquo;t
-matter, as most translate to any programming language you choose. The point
-is to get your brain and your fingers adept at solving problems in code.</p>
-
-<p>What other lists of coding exercises have people discovered useful?</p>
 ]]></content>
   </entry>
   

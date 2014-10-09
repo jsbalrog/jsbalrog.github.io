@@ -4,13 +4,97 @@
   <title><![CDATA[JS Balrog]]></title>
   <link href="http://http://jsbalrog.github.io/atom.xml" rel="self"/>
   <link href="http://http://jsbalrog.github.io/"/>
-  <updated>2014-10-05T11:56:20-06:00</updated>
+  <updated>2014-10-08T18:19:07-06:00</updated>
   <id>http://http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
     
   </author>
 
+  
+  <entry>
+    
+    <title type="html"><![CDATA[Angularjs providers]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers/"/>
+    
+    <updated>2014-10-07T17:04:00-06:00</updated>
+    <id>http://http://jsbalrog.github.io/blog/2014/10/07/angularjs-providers</id>
+    
+      <content type="html"><![CDATA[<p>When it comes to objects&mdash;and especially singleton objects or factory instances&mdash;
+angular offerings are multiple-choice. I want to spell out the differences between
+angular-specific providers, services, and factories, and give some guidelines to
+when you would use each.</p>
+
+<!-- more -->
+
+
+<h3>Providers</h3>
+
+<p>At root, all three types of objects basically are providers. <code>angular.service</code> and
+<code>angular.factory</code> are syntactic sugar on top of <code>angular.provider</code>. That said, you
+should really prefer using a <code>service</code> or a <code>factory</code> (more on these below); use
+a <code>provider</code> only when you want to expose an API that you need to access in your
+angular module&rsquo;s <code>config</code> block, before the app starts. For example, you may
+have a reuseable service for which you want to modify the behavior between
+applications.</p>
+
+<p>Let&rsquo;s look at a concrete example. Let&rsquo;s say I have an app that has the requirement
+of specifying a different language depending on the app instance that is
+running&mdash;the app running on the servers in Japan, for example, must specify
+japanese as the app&rsquo;s language. The default language, if no config is
+specified, is english. I know, it&rsquo;s pretty contrived&mdash;but hey, I don&rsquo;t write
+the requirements, I just implement them.</p>
+
+<p>Here&rsquo;s what our provider looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">,</span> <span class="p">[]).</span><span class="nx">provider</span><span class="p">(</span><span class="s1">&#39;LanguageProvider&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">lang</span> <span class="o">=</span> <span class="s1">&#39;english&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">lang</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">lang</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">getLang</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">lang</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">};</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">setLang</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lang</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">this</span><span class="p">.</span><span class="nx">lang</span> <span class="o">=</span> <span class="nx">lang</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The key here is the $get function&mdash;this returns an object that exposes the
+API for the app to use at runtime&mdash;in this case <code>getLang</code> is available to
+call within an arbitrary controller, etc.</p>
+
+<p>Moreover&mdash;and here&rsquo;s the important thing&mdash;the <code>setLang</code> method is callable
+in the app&rsquo;s config block.</p>
+
+<h3>Services</h3>
+
+<h3>Factories</h3>
+]]></content>
+      
+  </entry>
   
   <entry>
     
@@ -31,16 +115,17 @@ the power of isolate scope-based directives.</p>
 <p>Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>My name is {{ friend.name }}, I play the {{ friend.hobby }}.<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>&hellip;And here&rsquo;s the controller:</p>
@@ -69,12 +154,11 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 <p>So, I do something like this:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span> <span class="na">ng-click=</span><span class="s">“main.coolifyMe(friend)”</span><span class="nt">&gt;</span>My name is {{ friend.name }}, I play the {{ friend.hobby }}.<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>&hellip;and the corresponding method in the controller:</p>
@@ -101,16 +185,17 @@ Sounds like a job for a reusable custom directive!</p>
 <p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;coolness</span><span class="na">-dir</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
@@ -181,16 +266,17 @@ its template&mdash;this will break!</p>
 
 <p>First, here’s what our html looks like:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;ul>
-</span><span class='line'>     &lt;coolness-dir friends=“main.enemies”>&lt;/coolness-dir>
-</span><span class='line'>&lt;/ul>
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>...
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>     <span class="nt">&lt;coolness</span><span class="na">-dir</span> <span class="na">friends=</span><span class="s">“main.enemies”</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Notice that we added an attribute to our directive: <code>friends</code>. This is the hole

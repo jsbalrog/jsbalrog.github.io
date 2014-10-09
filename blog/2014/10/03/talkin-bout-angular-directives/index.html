@@ -72,16 +72,17 @@ the power of isolate scope-based directives.</p>
 <p>Let’s start with this use case: I’ve got a list of friends and I want to list out
 their name and their hobby. The html looks like this:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;li ng-repeat=“friend in main.friends”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span><span class="nt">&gt;</span>My name is {{ friend.name }}, I play the {{ friend.hobby }}.<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>&hellip;And here&rsquo;s the controller:</p>
@@ -110,12 +111,11 @@ I want their name to be upgraded to “B.B. King” and their hobby upgraded to
 
 <p>So, I do something like this:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;li ng-repeat=“friend in main.friends” ng-click=“main.coolifyMe(friend)”>My name is {{ friend.name }}, I play the {{ friend.hobby }}.&lt;/li>
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">“friend</span> <span class="na">in</span> <span class="na">main</span><span class="err">.</span><span class="na">friends</span><span class="err">”</span> <span class="na">ng-click=</span><span class="s">“main.coolifyMe(friend)”</span><span class="nt">&gt;</span>My name is {{ friend.name }}, I play the {{ friend.hobby }}.<span class="nt">&lt;/li&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>&hellip;and the corresponding method in the controller:</p>
@@ -142,16 +142,17 @@ Sounds like a job for a reusable custom directive!</p>
 <p>So, I’m going to create a directive, coolnessDir, that can be reused anywhere.
 Here’s what the html looks like:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div ng-controller=“MyCtrl as main”>
-</span><span class='line'>  &lt;ul>
-</span><span class='line'>    &lt;coolness-dir>&lt;/coolness-dir>
-</span><span class='line'>  &lt;/ul>
-</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">“MyCtrl</span> <span class="na">as</span> <span class="na">main</span><span class="err">”</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;coolness</span><span class="na">-dir</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'>  <span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Nice, neat, compact html, which is what angular directives are awesome for. Here’s
@@ -222,16 +223,17 @@ its template&mdash;this will break!</p>
 
 <p>First, here’s what our html looks like:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>...
-</span><span class='line'>&lt;ul>
-</span><span class='line'>     &lt;coolness-dir friends=“main.enemies”>&lt;/coolness-dir>
-</span><span class='line'>&lt;/ul>
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>...
+</span><span class='line'><span class="nt">&lt;ul&gt;</span>
+</span><span class='line'>     <span class="nt">&lt;coolness</span><span class="na">-dir</span> <span class="na">friends=</span><span class="s">“main.enemies”</span><span class="nt">&gt;</span><span class="err">&lt;</span>/coolness-dir&gt;
+</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Notice that we added an attribute to our directive: <code>friends</code>. This is the hole
