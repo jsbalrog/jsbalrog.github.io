@@ -2,9 +2,9 @@
 layout: page
 title: "about JS balrog"
 date: 2014-10-05 11:09
-comments: true
-sharing: true
-footer: true
+comments: false
+sharing: false
+footer: false
 ---
 JS Balrog is a site about web development, programming, and other random things,
 written and maintained by Ted Jenkins, a web developer, literati,
