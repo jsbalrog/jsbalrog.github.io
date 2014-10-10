@@ -3,10 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Blog Archives - JS Balrog</title>
+	<title>Fix Helmet to work with Angularjs and LiveReload - JS Balrog</title>
     <meta name="author" content="Ted Jenkins">
     
-	<meta name="description" content="2014 Fix Helmet to Work With Angularjs and LiveReload Oct 10 Angularjs Providers, Factories, and Services Oct 7 angularjs, programming Talkin&#8217 &hellip;">
+	<meta name="description" content="Helmet is a nifty node module&mdash;it provides some protection from several types of application attacks. Here’s a great
+post that explains why you &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -106,203 +107,78 @@
 <div id="toload">
 <!-- begin toload -->
     <div id="content" class="inner">
-        
+        <article class="post">
+	<h2 class="title">Fix Helmet to Work With Angularjs and LiveReload</h2>
+	<div class="entry-content"><p>Helmet is a nifty node module&mdash;it provides some protection from several types of application attacks. Here’s a great
+<a href="http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet/">post</a> that explains why you should
+be using helmet in your node apps.</p>
+
+<p>However, I was getting a couple of errors in my angular-based node app, and on top of that, my livereload stopped working,
+which I really depend on in my dev workflow. One of the errors had to do with angular itself, the other had to do with the
+injection of the livereload script into my index.html. Here are the two things I did to fix these errors.</p>
+
+<!-- more -->
+
+
+<h3>The Errors</h3>
+
+<p>First, the errors that were showing up in my browser console whenever I loaded the app:
+<code>Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following
+Content Security Policy directive: "script-src 'self' 'unsafe-inline’ *.blah.com”</code></p>
+
+<p>and</p>
+
+<p><code>Refused to load the script 'http://localhost:35729/livereload.js?snipver=1' because it violates the following Content
+Security Policy directive: "script-src 'self' 'unsafe-inline' *.blah.com”</code></p>
+
+<p>The first error was angular-related, the second liveReload-related. I specify ‘self’ and a domain for defaultSrc and
+scriptSrc in my helmet middleware. See the blog post above for more on that.</p>
+
+<h3>The Solutions</h3>
+
+<p>First, to solve the angular issue, I add the <code>ng-csp</code> to my <code>ng-app</code> tag in my index.html so it looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html</span> <span class="na">ng-app=</span><span class="s">&quot;app&quot;</span> <span class="na">ng-csp</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Second, to solve the liveReload issue, I move my <code>app.use(helmet.csp{...})</code> middleware call into my <code>if(production === env)</code>
+block, which is where it should be. I shouldn’t have to worry too much about CSP during dev on my box, which is the only
+environment in which connect-livereload inserts the script tag into my index.html anyways.</p>
+
+<p>Performing these two things got rid of the annoying console errors, and —bam&mdash;live reload began to work again! Hopefully
+this helps someone else.</p>
+</div>
+
+<div class="meta">
 	
-
-
-	
-	
-	<section class="archives"><h1 class="year">2014</h1>
-
-<article>
-  <h2 class="title"><a href="/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload/">Fix Helmet to Work With Angularjs and LiveReload</a></h2>
-	<div class="meta">
-		<span class="date">Oct 10</span>
-		<span class="tags">
-
-</span>
-	    
-	</div>
+</div>
 </article>
 
-
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2014/10/07/angularjs-providers/">Angularjs Providers, Factories, and Services</a></h2>
-	<div class="meta">
-		<span class="date">Oct  7</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
 	</div>
-</article>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
 
-	
 
-
-<article>
-  <h2 class="title"><a href="/blog/2014/10/03/talkin-bout-angular-directives/">Talkin&#8217; &#8216;Bout Angular Directives</a></h2>
-	<div class="meta">
-		<span class="date">Oct  3</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2014/08/15/decorator-pattern-in-javascript/">Decorator Pattern in JavaScript</a></h2>
-	<div class="meta">
-		<span class="date">Aug 15</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2014/07/16/oo-javascript-creating-objects/">OO Javascript: Creating Objects</a></h2>
-	<div class="meta">
-		<span class="date">Jul 16</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2014/05/06/stick-it-to-drm/">Stick It to DRM</a></h2>
-	<div class="meta">
-		<span class="date">May  6</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/announcements/'>announcements</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/">Facebook Auth With Angularjs and Tokens</a></h2>
-	<div class="meta">
-		<span class="date">Apr 20</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-	
-	
-		</section>
-	
-	<section class="archives"><h1 class="year">2013</h1>
-
-<article>
-  <h2 class="title"><a href="/blog/2013/10/19/coding-equals-equals-practice/">Coding == Practice</a></h2>
-	<div class="meta">
-		<span class="date">Oct 19</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2013/10/17/promises-in-angular-dot-js/">Promises in Angular.js</a></h2>
-	<div class="meta">
-		<span class="date">Oct 17</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/angularjs/'>angularjs</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
-	
-
-
-<article>
-  <h2 class="title"><a href="/blog/2013/10/17/understanding-closures-in-javascript/">Understanding Closures in Javascript</a></h2>
-	<div class="meta">
-		<span class="date">Oct 17</span>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
-
-
-</span>
-	    
-	</div>
-</article>
-
-
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
 
     </div>
     <footer id="footer">
@@ -329,7 +205,10 @@
       var disqus_shortname = 'jsbalrog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload/';
+        var disqus_url = 'http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
