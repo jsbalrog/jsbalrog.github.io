@@ -4,7 +4,7 @@
   <title><![CDATA[Category: angularjs | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/angularjs/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-10T15:00:03-06:00</updated>
+  <updated>2014-10-10T15:01:08-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fix Helmet to work with Angularjs and LiveReload]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload/"/>
+    <updated>2014-10-10T14:53:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload</id>
+    <content type="html"><![CDATA[<p>Helmet is a nifty node module&mdash;it provides some protection from several types of application attacks. Here’s a great
+<a href="http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet/">post</a> that explains why you should
+be using helmet in your node apps.</p>
+
+<p>However, I was getting a couple of errors in my angular-based node app, and on top of that, my livereload stopped working,
+which I really depend on in my dev workflow. One of the errors had to do with angular itself, the other had to do with the
+injection of the livereload script into my index.html. Here are the two things I did to fix these errors.</p>
+
+<!-- more -->
+
+
+<h3>The Errors</h3>
+
+<p>First, the errors that were showing up in my browser console whenever I loaded the app:
+<code>Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following
+Content Security Policy directive: "script-src 'self' 'unsafe-inline’ *.blah.com”</code></p>
+
+<p>and</p>
+
+<p><code>Refused to load the script 'http://localhost:35729/livereload.js?snipver=1' because it violates the following Content
+Security Policy directive: "script-src 'self' 'unsafe-inline' *.blah.com”</code></p>
+
+<p>The first error was angular-related, the second liveReload-related. I specify ‘self’ and a domain for defaultSrc and
+scriptSrc in my helmet middleware. See the blog post above for more on that.</p>
+
+<h3>The Solutions</h3>
+
+<p>First, to solve the angular issue, I add the <code>ng-csp</code> to my <code>ng-app</code> tag in my index.html so it looks like this:
+<code>html
+&lt;html ng-app="app" ng-csp&gt;
+</code></p>
+
+<p>Second, to solve the liveReload issue, I move my <code>app.use(helmet.csp{...})</code> middleware call into my <code>if(production === env)</code>
+block, which is where it should be. I shouldn’t have to worry too much about CSP during dev on my box, which is the only
+environment in which connect-livereload inserts the script tag into my index.html anyways.</p>
+
+<p>Performing these two things got rid of the annoying console errors, and —bam&mdash;live reload began to work again! Hopefully
+this helps someone else.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Angularjs providers, factories, and services]]></title>

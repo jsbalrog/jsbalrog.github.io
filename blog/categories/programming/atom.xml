@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-10T15:00:03-06:00</updated>
+  <updated>2014-10-10T15:01:08-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fix Helmet to work with Angularjs and LiveReload]]></title>
+    <link href="http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload/"/>
+    <updated>2014-10-10T14:53:00-06:00</updated>
+    <id>http://jsbalrog.github.io/blog/2014/10/10/fix-helmet-to-work-with-angularjs-and-livereload</id>
+    <content type="html"><![CDATA[<p>Helmet is a nifty node module&mdash;it provides some protection from several types of application attacks. Here’s a great
+<a href="http://scottksmith.com/blog/2014/09/21/protect-your-node-apps-noggin-with-helmet/">post</a> that explains why you should
+be using helmet in your node apps.</p>
+
+<p>However, I was getting a couple of errors in my angular-based node app, and on top of that, my livereload stopped working,
+which I really depend on in my dev workflow. One of the errors had to do with angular itself, the other had to do with the
+injection of the livereload script into my index.html. Here are the two things I did to fix these errors.</p>
+
+<!-- more -->
+
+
+<h3>The Errors</h3>
+
+<p>First, the errors that were showing up in my browser console whenever I loaded the app:
+<code>Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following
+Content Security Policy directive: "script-src 'self' 'unsafe-inline’ *.blah.com”</code></p>
+
+<p>and</p>
+
+<p><code>Refused to load the script 'http://localhost:35729/livereload.js?snipver=1' because it violates the following Content
+Security Policy directive: "script-src 'self' 'unsafe-inline' *.blah.com”</code></p>
+
+<p>The first error was angular-related, the second liveReload-related. I specify ‘self’ and a domain for defaultSrc and
+scriptSrc in my helmet middleware. See the blog post above for more on that.</p>
+
+<h3>The Solutions</h3>
+
+<p>First, to solve the angular issue, I add the <code>ng-csp</code> to my <code>ng-app</code> tag in my index.html so it looks like this:
+<code>html
+&lt;html ng-app="app" ng-csp&gt;
+</code></p>
+
+<p>Second, to solve the liveReload issue, I move my <code>app.use(helmet.csp{...})</code> middleware call into my <code>if(production === env)</code>
+block, which is where it should be. I shouldn’t have to worry too much about CSP during dev on my box, which is the only
+environment in which connect-livereload inserts the script tag into my index.html anyways.</p>
+
+<p>Performing these two things got rid of the annoying console errors, and —bam&mdash;live reload began to work again! Hopefully
+this helps someone else.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Angularjs providers, factories, and services]]></title>
@@ -865,269 +911,6 @@ alert(guitar1.getBrand === guitar2.getBrand);
 <p>Now we have our cake and eat it, too: We can create guitars passing
 in different initialization parameters for each one, and yet all guitars
 share the same <code>getBrand</code> method. Great, huh?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Facebook auth with Angularjs and tokens]]></title>
-    <link href="http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens/"/>
-    <updated>2014-04-20T19:28:00-06:00</updated>
-    <id>http://jsbalrog.github.io/blog/2014/04/20/facebook-auth-with-angularjs-and-tokens</id>
-    <content type="html"><![CDATA[<p>(For full example code, see my <a href="https://github.com/jsbalrog/angular-fullstack-tokens">angular-fullstack-tokens repo</a>.)</p>
-
-<p>I have an angular-fullstack based app (angular, node, express, passport),
-and I&rsquo;m using token-based authentication following <a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">this great blogpost</a>,
-rather than cookie-based, using express-jwt and jsonwebtoken.</p>
-
-<p>I started with daftmonk&rsquo;s <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>,
-replaced its authentication system with tokens (easy enough), then set
-out to include social-based authentication for facebook, using passport-
-facebook. I kept running into CSRF-prevention issues, with the error
-No &lsquo;Access-Control-Allow-Origin&rsquo; header is present on the requested
-resource.</p>
-
-<p>Without going too far off topic, this was due to the fact that
-I was attempting to make an <code>$http</code> call from the client to a node route
-that I had set up for facebook authentication, rather than simply using
-an anchor tag href call on the client. Ajax calls are particular tricky
-across domain origins. I had to set it up this way because I wanted my
-server to return user info of my making back to the client.</p>
-
-<p>I tried solutions outlined <a href="http://matthewtyler.io/handling-oauth2-with-node-js-and-angular-js-passport-to-the-rescue/">here</a>
-and <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-facebook">here</a>,
-each to no avail. Granted, both were under the &ldquo;cookie-based auth&rdquo; umbrella,
-but that shouldn&rsquo;t matter, right?</p>
-
-<p>After searching for nearly two days, I came up with the idea of making
-auth request client-side, rather than server-side. Using the <a href="https://github.com/ninjatronic/ngFacebook">ngFacebook</a>
-angular module along with <a href="https://github.com/werk85/grunt-ng-constant">grunt-ng-constant</a> gave me the answer I needed.
-Here&rsquo;s how to do it.</p>
-
-<!-- more -->
-
-
-<h3>Client-side auth with ngFacebook</h3>
-
-<p>First, install ngFacebook via Bower:</p>
-
-<p><code>
-bower install ngFacebook -save
-</code></p>
-
-<p>Then, in your angular app.js (or wherever you do your module&rsquo;s config),
-declare &lsquo;facebook&rsquo; as a dependency, and initialize using your Facebook&rsquo;s
-app id, thus:</p>
-
-<p>```javascript
-angular</p>
-
-<pre><code>.module('my-angularjs-app', ['facebook'])
-.config(['$facebookProvider', function($facebookProvider) {
-    $facebookProvider.init({
-        appId: 'myFbApplicationId'
-    });
-}]);
-</code></pre>
-
-<p>```</p>
-
-<p>(But what about multiple environments? Those FB apps are picky about site URLs.
-More on this in the next section&hellip;)</p>
-
-<p>Now, wherever you plan on having the user do the facebook auth, add the proper
-button:</p>
-
-<p><code>html
-&lt;button type="button" class="btn btn-primary btn-large" data-ng-click="loginFacebook()"&gt;Login with Facebook&lt;/button&gt;
-</code>
-Next, in your controller, set up calls to do your facebook logins much the
-same way you would typically make calls using Facebook&rsquo;s javascript SDK:</p>
-
-<p>```javascript
-$scope.loginFacebook = function() {
-  $facebook.login({scope:&lsquo;email&rsquo;}).then(function(response) {</p>
-
-<pre><code>$scope.me();
-</code></pre>
-
-<p>  },
-  function(response) {</p>
-
-<pre><code>console.log("Error!", response);
-</code></pre>
-
-<p>  });
-};
-$scope.me = function() {
-  $facebook.api(&lsquo;/me&rsquo;, {fields: &lsquo;id, name, email, username&rsquo;}).then(function(response) {</p>
-
-<pre><code>Auth.loginFacebook(response).then(function() {
-  $location.path('/');
-});
-</code></pre>
-
-<p>  });
-};
-```</p>
-
-<p>Notice that it&rsquo;s all promised-based goodness. For my purposes, in the result
-of my call to &lsquo;/me&rsquo; I&rsquo;m in turn making an <code>$http</code> call to one of my server routes
-that I have set up for checking for user info/creating a new user in my own
-data store. On a successful return there, I direct the user to the homepage.</p>
-
-<p>For sake of completeness, here&rsquo;s my Auth service method:</p>
-
-<p>```javascript
-loginFacebook: function(user, callback) {</p>
-
-<pre><code>  var deferred = $q.defer(),
-      cb = callback || angular.noop;
-  console.log("here", user);
-  $http.post('/login/facebook', user)
-    .success(function(data) {
-      $window.sessionStorage.token = data.token;
-      // Do something with the user here
-      deferred.resolve(profile);
-    })
-    .error(function(data) {
-      delete $window.sessionStorage.token;
-      // Do something else here
-      deferred.reject($rootScope.currentUser);
-    });
-  return deferred.promise;
-}
-</code></pre>
-
-<p>```</p>
-
-<p>So, back to that question of different facebook app id&rsquo;s to account for
-different environments. grunt-ng-constant to the rescue&hellip;</p>
-
-<h3>Using grunt-ng-constant</h3>
-
-<p>First, let&rsquo;s install grunt-ng-constant:</p>
-
-<p><code>
-npm install grunt-ng-constant --save-dev
-</code>
-Next, in your <code>Gruntfile.js</code>, enter the following:</p>
-
-<p>```javascript
-// constants
-ngconstant: {
-  // Options for all targets
-  options: {</p>
-
-<pre><code>name: 'config',
-</code></pre>
-
-<p>  },
-  // Environment targets
-  development: {</p>
-
-<pre><code>options: {
-  dest: '&lt;%= yeoman.app %&gt;/scripts/config.js'
-},
-constants: {
-  ENV: {
-    name: 'facebook',
-    appId: 'YOUR_APP_ID'
-  }
-}
-</code></pre>
-
-<p>  },
-  production: {</p>
-
-<pre><code>options: {
-  dest: '&lt;%= yeoman.dist %&gt;/scripts/config.js'
-},
-constants: {
-  ENV: {
-    name: 'facebook',
-    appId: 'YOUR_PROD_APP_ID'
-  }
-}
-</code></pre>
-
-<p>  }
-},
-```</p>
-
-<p>This tells grunt to automatically create a file called config.js under
-the <code>scripts</code> folder.</p>
-
-<p>How do we tell grunt when to create this file? I put mine in the section
-that tells it to run a local server for development. I added it to the run
-task of the <code>grunt serve</code> task:</p>
-
-<p>```javascript
-grunt.registerTask(&lsquo;serve&rsquo;, function (target) {
-  if (target === &lsquo;dist&rsquo;) {</p>
-
-<pre><code>return grunt.task.run(['build', 'connect:dist:keepalive']);
-</code></pre>
-
-<p>  }</p>
-
-<p>  grunt.task.run([</p>
-
-<pre><code>'clean:server',
-'ngconstant:development',
-'bower-install',
-'concurrent:server',
-'autoprefixer',
-'connect:livereload',
-'watch'
-</code></pre>
-
-<p>  ]);
-});
-<code>``
-And then, for grunt production, I added mine to the</code>grunt build` task:</p>
-
-<p><code>javascript
-grunt.registerTask('build', [
-  'clean:dist',
-  'ngconstant:production',
-  'bower-install'
-]);
-</code></p>
-
-<p>When grunt runs, a config.js file is created:</p>
-
-<p>```javascript
-angular.module(&lsquo;config&rsquo;, [])</p>
-
-<p>.constant(&lsquo;ENV&rsquo;, {
-  &lsquo;name&rsquo;: &lsquo;facebook&rsquo;,
-  &lsquo;appId&rsquo;: &lsquo;your-development-appId&rsquo;
-});
-```
-We need to add this new file to our index.html:</p>
-
-<p>```html</p>
-
-<script src="http://jsbalrog.github.io/scripts/config.js"></script>
-
-
-<p>```</p>
-
-<p>Now we can inject it into our angular app:</p>
-
-<p><code>javascript
-angular.module('myApp', ['ngCookies', 'ngResource', 'ngSanitize', 'ngRoute', 'facebook', 'config']).config(function ($routeProvider, $locationProvider, $httpProvider, $facebookProvider, ENV) {
-</code></p>
-
-<p>Finally, in the config of our app (the same place where we init our facebook module),
-we use the ENV constant:</p>
-
-<p><code>javascript
-$facebookProvider.init({appId: ENV.appId});
-</code></p>
-
-<p>And that&rsquo;s it! Now, when you click the &ldquo;Login with Facebook&rdquo; button, the facebook login
-popup will show that is the right facebook app for your environment.</p>
 ]]></content>
   </entry>
   
