@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming | JS Balrog]]></title>
   <link href="http://jsbalrog.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://jsbalrog.github.io/"/>
-  <updated>2014-10-10T15:01:08-06:00</updated>
+  <updated>2014-10-10T15:05:01-06:00</updated>
   <id>http://jsbalrog.github.io/</id>
   <author>
     <name><![CDATA[Ted Jenkins]]></name>
@@ -40,8 +40,8 @@ Content Security Policy directive: "script-src 'self' 'unsafe-inline’ *.blah.c
 <p><code>Refused to load the script 'http://localhost:35729/livereload.js?snipver=1' because it violates the following Content
 Security Policy directive: "script-src 'self' 'unsafe-inline' *.blah.com”</code></p>
 
-<p>The first error was angular-related, the second liveReload-related. I specify ‘self’ and a domain for defaultSrc and
-scriptSrc in my helmet middleware. See the blog post above for more on that.</p>
+<p>The first error was angular-related, the second livereload-related. I specify <code>‘self’</code> and a domain for <code>defaultSrc</code> and
+<code>scriptSrc</code> in my helmet middleware. See the blog post referenced above for more on that.</p>
 
 <h3>The Solutions</h3>
 
@@ -54,7 +54,7 @@ scriptSrc in my helmet middleware. See the blog post above for more on that.</p>
 block, which is where it should be. I shouldn’t have to worry too much about CSP during dev on my box, which is the only
 environment in which connect-livereload inserts the script tag into my index.html anyways.</p>
 
-<p>Performing these two things got rid of the annoying console errors, and —bam&mdash;live reload began to work again! Hopefully
+<p>Performing these two things got rid of the annoying console errors, and bam&mdash;livereload began to work again! Hopefully
 this helps someone else.</p>
 ]]></content>
   </entry>
