@@ -26,8 +26,8 @@ and
 `Refused to load the script 'http://localhost:35729/livereload.js?snipver=1' because it violates the following Content 
 Security Policy directive: "script-src 'self' 'unsafe-inline' *.blah.com”`
 
-The first error was angular-related, the second liveReload-related. I specify ‘self’ and a domain for defaultSrc and 
-scriptSrc in my helmet middleware. See the blog post above for more on that.
+The first error was angular-related, the second livereload-related. I specify `‘self’` and a domain for `defaultSrc` and 
+`scriptSrc` in my helmet middleware. See the blog post referenced above for more on that.
 
 ### The Solutions
 
@@ -40,5 +40,5 @@ Second, to solve the liveReload issue, I move my `app.use(helmet.csp{...})` midd
 block, which is where it should be. I shouldn’t have to worry too much about CSP during dev on my box, which is the only 
 environment in which connect-livereload inserts the script tag into my index.html anyways.
 
-Performing these two things got rid of the annoying console errors, and —bam--live reload began to work again! Hopefully 
+Performing these two things got rid of the annoying console errors, and bam--livereload began to work again! Hopefully 
 this helps someone else.
